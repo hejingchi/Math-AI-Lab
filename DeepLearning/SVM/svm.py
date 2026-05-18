@@ -29,7 +29,8 @@ def svm(data, label):
     dim = len(data[0]) # 维度
     lr = 0.001 # 学习率设置
     rng = np.random.default_rng()
-    w = rng.random()
+    w = rng.uniform(-1, 1, dim)
+    b = rng.uniform(-1, 1) # 目标输出
     return w, b
 
 def main():
