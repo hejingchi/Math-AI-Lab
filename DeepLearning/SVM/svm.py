@@ -31,6 +31,7 @@ def svm(data, label):
     rng = np.random.default_rng()
     w = rng.uniform(-1, 1, dim)
     b = rng.uniform(-1, 1) # 目标输出
+    print(w, b)
     return w, b
 
 def main():
