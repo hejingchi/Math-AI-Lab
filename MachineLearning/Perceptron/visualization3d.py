@@ -18,6 +18,7 @@ def plot3d(data, label, random_w, random_b, predict_w, predict_b):
         print("dimension not equal to 3!")
         return False
     fig = plt.figure() # 创建类
+    fig.title("三维平面感知机二分类示意图")
     ax = fig.add_subplot(111, projection="3d")
     N = len(data)
 
