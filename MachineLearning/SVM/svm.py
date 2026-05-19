@@ -61,6 +61,7 @@ def svm_hard(data, label):
     for epoch in range(5):
         running_loss = 0
         for i in range(N):
+            return
 
 
 
