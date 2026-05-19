@@ -115,7 +115,7 @@ $$ \boxed{ \begin{bmatrix} w \cdot x_1 + b \\ w \cdot x_2 + b \\ \vdots \\ w
 这其实就是给出了一个核函数，所谓核函数就是满足$K(x, z) = \Phi(x) \Phi(z) $的函数 $K$，此外还有一些条件例如半正定等等.
 高等代数中的 $\text{gram}$ 矩阵就是一个矩阵的转置和其乘积。这一方面可以看成矩阵的列向量的两两内积，另一方面，由于
 
-$$ x^TA^TAx=(Ax)^T(Ax) \ge 0$$ 
+$$ x^TATAx=(A^Tx)^T(A^Tx) \ge 0$$ 
 
 其实就给出了 $\text{gram}$ 矩阵半正定的证明。
 其实就给出了 $\text{gram}$ 矩阵半正定的证明。这一个是核函数的要求之一
