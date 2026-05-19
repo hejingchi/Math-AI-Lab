@@ -221,3 +221,6 @@ __marimo__/
 
 # 手动添加
 .idea/
+*.png
+*.ggb
+trash/
