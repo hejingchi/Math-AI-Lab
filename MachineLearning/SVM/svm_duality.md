@@ -320,7 +320,7 @@ $$
 $$
 \begin{aligned}
 \min_\alpha\quad & \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}
-\alpha_i\alpha_j y_i y_j \left( x_i\cdot x_j\right) \\
+\alpha_i\alpha_j y_i y_j \left( x_i\cdot x_j\right) -\sum_{i=1}^{N} \alpha_i\\
 \text{s.t.} \quad & \sum_{i=1}^{N} \alpha_i y_i =0  \\
 & \alpha_i \geqslant 0
 \end{aligned}

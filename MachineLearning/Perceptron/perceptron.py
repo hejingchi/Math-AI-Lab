@@ -8,26 +8,26 @@ def random_data(N = 5, dim = 2):
     为线性可分感知机模型创建一个数据集
     创建一个二维空间中的数据集，采用直线 wx+b=0 进行划分，w和b使用numpy随机数进行生成
     再随机生成n个数据点data[i] = [x_i, y_i]，
-    x = data[i]，若wx+b>0则把该数据点划分为正类，label[i] = 1
-    否则是负类，label[i] = 0
+    x = data[i]，若wx+b>0则把该数据点划分为正类，y[i] = 1
+    否则是负类，y[i] = 0
     :return:
     data 数据集，包括n个数对(x_i, y_i), i=1, 2,..., n
-    label 数据标签 表示数据是正类还是负类
+    y 数据标签 表示数据是正类还是负类
     '''
     rng = np.random.default_rng(seed = 128) #随机种子
     w = rng.uniform(-1, 1, dim) # 创建一维数组
     b = rng.uniform(-1, 1) # 创建偏置
     data = rng.uniform(-10, 10, (N, dim)) # 数据集创建 100*2
-    label = (data @ w + b > 0) * 2 - 1 # 分类类别设置
-    label = np.array(label) # 转化为numpy 防止出现问题
+    y = (data @ w + b > 0) * 2 - 1 # 分类类别设置
+    y = np.array(y) # 转化为numpy 防止出现问题
     print(f"random plane {np.array2string(w, precision=2)} @ x + {b:.2f} = 0")
-    return data, label, w, b
+    return data, y, w, b
 
-def perceptron(data, label):
+def perceptron(data, y):
     '''
 
     :param data: 数据集
-    :param label: 类别
+    :param y: 类别
     :return: 返回值是w和b
     '''
     N = len(data) # 数据集长度
@@ -43,10 +43,10 @@ def perceptron(data, label):
         # epoch是执行轮数
         running_loss = 0
         for i in range(N):
-            if label[i] * (data[i] @ w + b) <= 0: # 如果分类有问题
+            if y[i] * (data[i] @ w + b) <= 0: # 如果分类有问题
                 running_loss += 1 # 损失函数
-                w += lr * label[i] * data[i]
-                b += lr * label[i] # 梯度下降法
+                w += lr * y[i] * data[i]
+                b += lr * y[i] # 梯度下降法
         print(f"epoch {epoch}, running_loss {running_loss / N:.3f}")
     print(f"predicting plane {np.array2string(w,precision=2)} @ x + {b:.2f} = 0")
     return w, b
@@ -58,11 +58,11 @@ def perceptron(data, label):
     # w = rng.uniform(-1, 1, (dim, 1))是dim*1的numpy矩阵
     # w = rng.uniform(-1, 1, (dim, 1))是dim维的一维数组
 
-def perceptron_dual(data, label):
+def perceptron_dual(data, y):
     '''
 
     :param data: 数据集
-    :param label: 类别
+    :param y: 类别
     :return: 返回w和b的值
     '''
     N = len(data) # 数据集个数
@@ -76,26 +76,26 @@ def perceptron_dual(data, label):
     for epoch in range(5):
         running_loss = 0
         for i in range(N): # 进行N次输出一下误差函数
-            margin = label * (gram @ (label * alpha) + b) # 计算有问题的点
+            margin = y * (gram @ (y * alpha) + b) # 计算有问题的点
             idx = np.where(margin <= 0)[0] # 找出所有错分类的下标
             alpha[idx] += lr # 对alpha更新其学习率
-            b += lr * np.sum(label[idx]) # 梯度更新 一次性更新一批 而且是要根据方向去更新
+            b += lr * np.sum(y[idx]) # 梯度更新 一次性更新一批 而且是要根据方向去更新
             running_loss = len(idx) / N
         print(f"epoch {epoch}, running_loss {running_loss:.3f}")
-    w = alpha * label @ data
+    w = alpha * y @ data
     print(f"predicting dual plane {np.array2string(w,precision=2)} @ x + {b:.2f} = 0")
     return w, b
 
 def main():
-    data, label ,random_w, random_b= random_data(100, 3)
+    data, y ,random_w, random_b= random_data(100, 3)
 
     print("="*10, "perceptron", "="*10)
-    w, b = perceptron(data, label)
+    w, b = perceptron(data, y)
     direction_loss = w @ random_w / np.linalg.norm(random_w) / np.linalg.norm(w)
     print(f"direction_loss {direction_loss:.4f}") # 方向差
     print("=" * 30)
 
-    w2, b2 = perceptron_dual(data, label)
+    w2, b2 = perceptron_dual(data, y)
     direction_loss_dual = w2 @ random_w / np.linalg.norm(random_w) / np.linalg.norm(w2)
     print(f"direction_loss_dual {direction_loss_dual:.4f}")
     print("=" * 30)
