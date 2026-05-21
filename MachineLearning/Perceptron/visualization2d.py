@@ -2,7 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
-from perceptron import *
+from MachineLearning.Perceptron.perceptron import *
 
 def plot2d(data, label, random_w, random_b, predict_w, predict_b):
     '''
@@ -40,13 +40,13 @@ def plot2d(data, label, random_w, random_b, predict_w, predict_b):
             -(random_w[0] * random_xline + random_b)
             / random_w[1]
     )
-    plt.plot(random_xline, random_yline, 'k')
+    plt.plot(random_xline, random_yline)
     predict_xline = np.linspace(-10, 10, N)
     predict_yline = (
             -(predict_w[0] * random_xline + predict_b)
             / predict_w[1]
     )
-    plt.plot(predict_xline, predict_yline, 'k')
+    plt.plot(predict_xline, predict_yline)
 
     plt.show()
     return True
