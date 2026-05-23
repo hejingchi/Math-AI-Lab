@@ -1,0 +1,159 @@
+
+\section{逼近阶的估计：Jackson定理与Zygmund类的应用}
+
+有了Korovkin定理保证的收敛性和Lebesgue常数提供的稳定性度量，我们现在进入定量逼近的核心——逼近阶的计算。这里的思路是：先用Jackson定理把最佳逼近误差$E_n(f)$与函数的光滑性（连续模）挂钩，再结合上一章的范数信息，对傅里叶部分和与Fejér算子分别得出具体收敛速率。最后，引入Zygmund类作为统一描述光滑性的语言，给出逼近阶的充要条件，并重新审视$|x|$和$|\sin x|$这两个经典例子。
+
+\subsection{连续模与Jackson定理}
+
+对于$f\in C_{2\pi}$，其连续模定义为
+\[
+\omega(f,\delta)=\sup_{|h|\le\delta}\max_{x}|f(x+h)-f(x)|,\qquad\delta>0.
+\]
+连续模刻画了函数的一致连续性：$\omega(f,\delta)\to0$当$\delta\to0$，且若$f\in\mathrm{Lip}\,\alpha$（$0<\alpha\le1$），则$\omega(f,\delta)\le M\delta^\alpha$。
+
+逼近论中一个里程碑式的结果是Jackson定理，它用连续模给出了最佳逼近误差的精确上界。
+
+\begin{theorem}[Jackson定理，周期形式]
+存在绝对常数$C>0$，使得对任意$f\in C_{2\pi}$和任意正整数$n$，有
+\[
+E_n(f)\le C\,\omega\!\left(f,\frac1n\right).
+\]
+\end{theorem}
+
+这个定理的证明通常借助Jackson核（或Fejér核的适当幂次）构造出具体的逼近多项式，细节可参见标准教材。这里我们直接使用这个结果。Jackson定理表明，函数越光滑（连续模越小），其最佳逼近误差衰减得越快。特别地，若$f\in\mathrm{Lip}\,\alpha$，则
+\[
+E_n(f)=O(n^{-\alpha}).
+\]
+
+\subsection{傅里叶部分和的逼近阶}
+
+对傅里叶部分和$S_n(f)$，直接应用Lebesgue不等式和Jackson定理，便得到
+\[
+\|f-S_n(f)\|_\infty\le (1+\Lambda_n)E_n(f)
+\le C(1+\Lambda_n)\,\omega\!\left(f,\frac1n\right).
+\]
+由于$\Lambda_n\sim\frac{4}{\pi^2}\ln n$，这意味着即使$f$非常光滑，前面的对数因子也会让误差上界比最佳可能多一个对数增长。更精确地说，对$f\in\mathrm{Lip}\,\alpha$，有
+\[
+\|f-S_n(f)\|_\infty=O\!\left(\frac{\ln n}{n^\alpha}\right).
+\]
+对数项的存在是无法消除的：确实存在$\mathrm{Lip}\,\alpha$函数，其傅里叶部分和的误差能达到$\asymp n^{-\alpha}\ln n$。因此$S_n$不是最优的线性逼近算子，其“额外对数代价”正是无界Lebesgue常数的直接后果。
+
+\subsection{Fejér算子的逼近阶}
+
+Fejér算子的情况要稍微妙一些。由于它不具备投影性质，不能直接套用$(1+\Lambda_n)E_n(f)$的形式。但我们可以直接用算子本身的结构来估计它与$f$的差距，并借助连续模得出Jackson型的界。
+
+对$f\in C_{2\pi}$，将$\sigma_n(f,x)-f(x)$写成
+\[
+\sigma_n(f,x)-f(x)=\frac1\pi\int_{-\pi}^{\pi}[f(x-t)-f(x)]\mathcal{F}_n(t)\,dt.
+\]
+由于$\mathcal{F}_n\ge0$，模仿Korovkin定量估计的标准手法，对任意$\delta>0$，
+\[
+\begin{aligned}
+|\sigma_n(f,x)-f(x)|
+&\le\frac1\pi\int_{|t|<\delta}\omega(f,\delta)\mathcal{F}_n(t)\,dt
++\frac1\pi\int_{\delta\le|t|\le\pi}2\|f\|_\infty\mathcal{F}_n(t)\,dt\\
+&\le\omega(f,\delta)+\frac{2\|f\|_\infty}{\pi}\int_{\delta\le|t|\le\pi}\mathcal{F}_n(t)\,dt.
+\end{aligned}
+\]
+利用$\mathcal{F}_n(t)\le\frac{1}{2(n+1)\sin^2(\delta/2)}$（对$|t|\ge\delta$）以及区间长度不超过$2\pi$，可得
+\[
+\frac1\pi\int_{\delta\le|t|\le\pi}\mathcal{F}_n(t)\,dt
+\le\frac{2}{(n+1)\sin^2(\delta/2)}.
+\]
+取$\delta=n^{-1/2}$，则$\sin(\delta/2)\sim\delta/2$，于是上述尾部不超过$O(1/n\cdot 1/\delta^2)=O(1)$？仔细核算：当$\delta=n^{-1/2}$时，$\sin^2(\delta/2)\approx \delta^2/4=n^{-1}/4$，因此
+\[
+\frac{1}{(n+1)\sin^2(\delta/2)}\approx\frac{4}{n+1}\cdot n=O(1).
+\]
+这无法让尾部随$n$增大而趋于零。这说明取$\delta$为$n^{-1/2}$还不够小。更精细的估计需要利用Fejér核在无穷远处的衰减，或者直接采用经典的Korovkin定理的“测试函数”技巧。
+
+事实上，上一章Korovkin定理的证明过程中，我们曾提取出一个一般性的定量不等式：对线性正算子$L_n$，
+\[
+\|L_nf-f\|_\infty\le 2\omega\!\left(f,\sqrt{\|\delta_n\|_\infty}\right),
+\]
+其中$\delta_n(x)=L_n((t-x)^2;x)$。对Fejér算子，可以用三角形式类似推导。考虑周期情形的“测试函数”$1,\cos t,\sin t$，其对应的中心矩为
+\[
+\sigma_n(\sin^2((t-x)/2);x)=\frac12[1-\sigma_n(\cos(t-x);x)].
+\]
+通过计算傅里叶系数可得$\sigma_n(\cos(t-x);x)=\cos x\cdot\frac1\pi\int_{-\pi}^{\pi}\cos t\,\mathcal{F}_n(t)dt+\sin x\cdot\frac1\pi\int_{-\pi}^{\pi}\sin t\,\mathcal{F}_n(t)dt$。由于$\mathcal{F}_n$是偶函数，正弦项积分为零；余弦项积分可由Dirichlet核积分得到：
+\[
+\frac1\pi\int_{-\pi}^{\pi}\cos t\,\mathcal{F}_n(t)dt
+=\frac1{n+1}\sum_{k=0}^{n}\frac1\pi\int_{-\pi}^{\pi}\cos t\,D_k(t)dt
+=\frac1{n+1}\sum_{k=0}^{n}\left(1-\frac{1}{k+1}\right)=1-\frac{H_{n+1}}{n+1},
+\]
+这里$H_{n+1}$是调和数。于是$\sigma_n(\cos(t-x);x)\approx\left(1-\frac{\ln n}{n}\right)\cos x$，进而
+\[
+\delta_n(x)=\sigma_n(2\sin^2((t-x)/2);x)=1-\sigma_n(\cos(t-x);x)\approx\frac{\ln n}{n}\cos x.
+\]
+这导致$\sqrt{\|\delta_n\|_\infty}\sim\sqrt{\frac{\ln n}{n}}$，从而给出估计
+\[
+\|\sigma_nf-f\|_\infty\le 2\omega\!\left(f,\sqrt{\frac{\ln n}{n}}\right).
+\]
+对$\mathrm{Lip}\,\alpha$函数，得到$\|\sigma_nf-f\|_\infty=O((\ln n)^{\alpha/2}n^{-\alpha/2})$。这一收敛速率比Bernstein算子的$O(n^{-\alpha/2})$多了一个对数因子，但本质上仍然是$n^{-\alpha/2}$量级。若直接使用Fejér算子的具体卷积结构，改进上述分析可得最优估计
+\[
+\|\sigma_nf-f\|_\infty\le C\,\omega\!\left(f,\frac1{\sqrt{n}}\right),
+\]
+这就是Fejér算子的Jackson型不等式。下面我们给出一个更为直接且避免对数因子的证明框架。
+
+\begin{proof}[Fejér算子Jackson型不等式的证明概略]
+利用连续模的性质，对任意$\delta>0$，
+\[
+\begin{aligned}
+|\sigma_n(f,x)-f(x)|
+&\le\frac1\pi\int_{-\pi}^{\pi}\omega(f,|t|)\mathcal{F}_n(t)\,dt\\
+&\le\omega(f,\delta)+\frac{2\|f\|_\infty}{\pi}\int_{\delta\le|t|\le\pi}\mathcal{F}_n(t)\,dt.
+\end{aligned}
+\]
+现在关键是要更精确地控制尾部积分。利用$\mathcal{F}_n(t)\le\frac{\pi^2}{2(n+1)t^2}$（由$\sin u\ge\frac{2}{\pi}u$在$[0,\pi/2]$上的估计可得），则当$\delta\le\pi$时，
+\[
+\int_{\delta\le|t|\le\pi}\mathcal{F}_n(t)\,dt\le 2\int_\delta^\pi\frac{\pi^2}{2(n+1)t^2}dt\le\frac{\pi^2}{n+1}\int_\delta^\infty\frac{dt}{t^2}=\frac{\pi^2}{(n+1)\delta}.
+\]
+选择$\delta=n^{-1/2}$，则尾部为$O(n^{-1/2})$，这已经能够与$\omega(f,\delta)$匹配。但更精细的平衡可取$\delta$使得$\omega(f,\delta)$与尾部同阶。若$\omega(f,\delta)\le M\delta$，取$\delta=n^{-1/2}$可得$O(n^{-1/2})$；对于一般$\omega(f,\delta)$，取$\delta=n^{-1/2}$，则$\omega(f,n^{-1/2})$控制主项，尾部为$O(n^{-1/2})$，因此最终有
+\[
+\|\sigma_nf-f\|_\infty\le C\omega\!\left(f,\frac1{\sqrt{n}}\right).
+\]
+\end{proof}
+
+因此，对于$f\in\mathrm{Lip}\,\alpha$，
+\[
+\|\sigma_nf-f\|_\infty=O(n^{-\alpha/2}).
+\]
+与傅里叶部分和相比，Fejér算子彻底消除了对数因子，但也付出了代价——它的逼近阶在光滑性较高时只有$n^{-\alpha/2}$，而非$S_n$的$n^{-\alpha}$（不计对数项）。这看似矛盾：为什么范数更小的算子，逼近速度反而（在$\alpha$较大时）更慢？答案在于$S_n$是投影，它能复制$\mathcal{T}_n$中的任何多项式，因此在光滑函数上可以充分利用函数的“高阶”信息；而$\sigma_n$丧失了投影性，本质上只利用了一阶光滑性。这一现象称为线性正算子的\textbf{饱和}（saturation），我们将在下一小节详细讨论。
+
+\subsection{Zygmund类与逼近阶的充要条件}
+
+为了从“函数光滑性”和“逼近阶”两个方向同时刻画，Zygmund引入了一类比Lipschitz条件更精细的函数类。对$0<\alpha<1$，$\mathrm{Lip}\,\alpha$已经足够；但对$\alpha=1$，Lipschitz条件本身并不足以给出$E_n(f)=O(1/n)$的充要特征。Zygmund类$\Lambda_*$（或记作$Z$）定义为满足
+\[
+|f(x+h)+f(x-h)-2f(x)|\le Mh
+\]
+的连续函数。这比Lipschitz条件弱，但它恰是$E_n(f)=O(1/n)$的充要条件。
+
+更一般地，可定义Zygmund类$Z^\alpha$（$\alpha>0$），其与最佳逼近有如下精确对应：
+\[
+f\in Z^\alpha\iff E_n(f)=O(n^{-\alpha}).
+\]
+这就是著名的\textbf{Jackson–Zygmund定理}（正定理与逆定理的结合）。你课上学过的例子：$|x|$和$|\sin x|$都属于$Z^1$，因此它们的最佳三角多项式逼近阶恰好为$O(1/n)$。注意这里的最佳逼近是$E_n(f)$，而不是某个具体算子的逼近误差。
+
+回到我们的两个算子上。由Lebesgue不等式或直接估计，可得
+\[
+\|f-S_n(f)\|_\infty\le (1+\Lambda_n)E_n(f),\qquad
+\|\sigma_nf-f\|_\infty\le C\omega(f,n^{-1/2}).
+\]
+对于$f\in Z^1$（比如$|x|$或$|\sin x|$），$E_n(f)=O(1/n)$。因此
+\[
+\|f-S_n(f)\|_\infty=O\!\left(\frac{\ln n}{n}\right),\qquad
+\|\sigma_nf-f\|_\infty=O(n^{-1/2}).
+\]
+傅里叶部分和虽然带有对数因子，但其阶$n^{-1}\ln n$远优于Fejér的$n^{-1/2}$。这说明，在处理具有较好光滑性的函数（特别是二阶广义导数存在的函数）时，投影型算子在逼近阶上具有显著优势。但投影性质的代价是Lebesgue常数发散，导致它在$C_{2\pi}$上不是一致有界的，从而不保证对所有连续函数收敛。
+
+Fejér算子用丧失投影性质的代价换取了全空间的一致收敛性和最稳定的范数（$1$），但它在光滑函数上会遭遇饱和：即使$f$无限可微，$\sigma_nf-f$的衰减速度也无法超越$O(1/n)$（实际上，对于Fejér算子，饱和阶是$O(1/n)$，此处的$O(n^{-1/2})$是对于Lipschitz类的估计；关于饱和的详细讨论可参考DeVore \& Lorentz）。这正是线性正算子的本质局限。
+
+\subsection{小结：Korovkin–Lebesgue–Jackson框架下的统一图景}
+
+我们现在可以将一切串联起来：
+\begin{itemize}
+\item \textbf{Korovkin定理}提供定性收敛判据：只需三个测试函数，保证线性正算子序列在整个空间上一致收敛。
+\item \textbf{Lebesgue不等式}（或其定量替代）将构造性算子的误差与最佳逼近误差挂钩，其中的Lebesgue常数衡量了算子的稳定性。
+\item \textbf{Jackson定理}及\textbf{Zygmund类}给出最佳逼近误差随光滑性的衰减律，从而导出各算子在具体函数类上的逼近阶。
+\end{itemize}
+
+对于傅里叶部分和，其Lebesgue常数对数发散，导致逼近阶中常含有对数因子；对于Fejér算子，常数恒为$1$，但因其非投影性，逼近阶受连续模控制，在光滑函数上出现饱和，仅为$O(n^{-1/2})$（或$O(1/n)$饱和）。两者互补：一个在光滑类上逼近更快但不稳定，一个稳定但速率较慢。这深刻揭示了逼近论中“最优”与“可构造”之间永恒的张力。

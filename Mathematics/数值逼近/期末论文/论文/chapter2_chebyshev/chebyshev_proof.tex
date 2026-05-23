@@ -1,0 +1,195 @@
+\begin{proof}
+仅对多项式情形给出证明，三角情形类似。
+
+\textbf{充分性}：设 $x_1<\cdots<x_{n+2}$ 是 $p$ 的一组交错偏离点，即
+\[
+|f(x_j)-p(x_j)| = e_n(f),\quad j=1,\dots,n+2,
+\]
+且相邻点误差符号交替。不妨设 $f(x_j)-p(x_j) = (-1)^{j-1}e_n(f)$。
+若 $p$ 不是最佳逼近，则存在 $q\in P_n$ 使 $\|f-q\| < \|f-p\|$。
+考虑 $d(x)=p(x)-q(x)\in P_n$。在 $x_j$ 处，
+\[
+d(x_j) = (p(x_j)-f(x_j)) - (q(x_j)-f(x_j)).
+\]
+因 $\|f-q\|<\|f-p\|$，故 $d(x_j)$ 的符号与 $p(x_j)-f(x_j)$ 相同。于是 $d$ 在 $x_j$ 处依次变号，从而 $d$ 至少有 $n+1$ 个零点，但 $d$ 是 $n$ 次多项式，于是 $d$ 至少有$ n+1$ 个零点。
+但 $d$ 为次数不超过 $n$ 的多项式，
+除非 $d\equiv0$，
+否则不可能有 $n+1$ 个不同零点。
+故 $d\equiv0$，即 $p\equiv q$，
+与假设矛盾。
+
+\textbf{必要性}：
+\begin{enumerate}
+    \item \textbf{交错偏离点有限且小于 $n+2$} 
+
+若交错偏离点个数 $N < n+2$，但 $p$ 仍是最佳逼近。记 $r(x)=f(x)-p(x)$，$M=\|r\|$。设
+\[
+a<x_1<\cdots<x_N<b
+\]
+为全体交错偏离点。
+
+对每个 $i=1,\dots,N-1$，
+由连续性可知存在
+\[
+\xi_i\in(x_i,x_{i+1})
+\]
+使得
+\[
+r(\xi_i)=0.
+\]
+
+再记
+\[
+\xi_0=a,\qquad \xi_N=b.
+\]将 $[a,b]$ 用 $$\xi_1,\dots,\xi_{N-1}$$ 分割成若干子区间，则 $r$ 在每个子区间上满足
+\[
+-M+\alpha < r(x)  \leqslant M \quad\text{或}\quad -M  \leqslant r(x) < M-\alpha.
+\]
+因为我们可以假设在区间 $[a, \xi_1]$ 上有 $r(x)  \leqslant 0$。因为 $\|r\| = M$，从而 $|r(x)|  \leqslant  M$，从而此时 $r(x) \geqslant -M$ 是成立的。
+
+由闭区间上连续函数的性质，存在 $0 < \alpha_1 < M $ 使得 $-M < r(x) < M -\alpha_1$ 在 $[a, \xi_1]$ 上成立。同理在每个子区间上都存在 $ 0 < \alpha_i < M $ 使得上述不等式成立。取 $\alpha = \min\{\alpha_i\}$，则在每个子区间上都有
+\[-M   \leqslant  r(x) < M - \alpha.
+\]或者
+\[-M + \alpha < r(x)  \leqslant  M \]成立。
+
+由于 $r$ 在每个子区间上不变号，
+且 $\phi$ 在穿过每个 $\xi_i$ 后也恰变号一次，
+故 $r$ 与 $\phi$ 在每个子区间上同号。
+
+令 $\phi(x) = \prod_{i=1}^{N-1}(x-\xi_i)\in P_{N-1}\subseteq P_n$。构造 $q(x)=p(x)+c\phi(x)$。我们通过选取合适的 $c$ 去导出 $q(x)$ 是比 $p(x)$ 更好的逼近，从而导致矛盾。
+
+不妨设在 $[a, \xi_1]$ 上 $r(x) \leqslant  0$ 并且 $\phi(x)$ 在 $[a, \xi_1]$ 上满足 $\phi(x)  \leqslant  0$（这只是符号上的问题）。
+记 $K = \|\phi\|$.
+
+此时 $-M  \leqslant  r(x) < M-\alpha $  注意到 $\phi(x)$ 与 $r(x)$ 在 $[a, \xi_1]$ 上符号相同。因为
+$$
+\begin{aligned}
+f(x) - q(x) &= f(x) - p(x) - c\phi(x)  \\
+              &= r(x) - c\phi(x) \\
+              &= r(x) + c|\phi(x)| \\
+\end{aligned}$$
+这里由于 $r(x)  \leqslant  0$ 并且 $\phi(x)  \leqslant  0$，所以 
+当 $c$ 满足 $ 0 < c| \phi(x) |  \leqslant  |c\cdot K| < \frac{\alpha}{2}$ 并且 $c>0$ 时
+有
+$$
+\begin{aligned}
+-M  < r(x) - c\phi(x) < M -\alpha + \frac{\alpha}{2} \\ 
+\end{aligned}
+$$
+同理，在区间 $[\xi_1, \xi_2]$ 上我们能够利用
+$$
+\begin{aligned}
+ -M +\alpha < r(x)  \leqslant  M
+\end{aligned}
+$$
+和
+$$
+\begin{aligned}
+f(x) - q(x) &= f(x) - p(x) - c\phi(x)  \\
+              &= r(x) - c\phi(x) \\
+              &= r(x) - c|\phi(x)| \\
+\end{aligned}
+$$
+得到
+$$
+\begin{aligned}
+-M + \alpha - \frac{\alpha}{2} < r(x) - c\phi(x) < M 
+\end{aligned}$$
+注意到上述过程与子区间的选择无关，因此在每个子区间上都满足上述不等式。
+从而有 $$\|f-q\| < M = \|f-p\|$$，并且根据 $q$ 的构造可以得知它是不超过$n$ 次的多项式，
+于是与 $\|f-q\| < \|f-p\|$矛盾。
+
+\item \textbf{交错偏离点有限且大于等于 $n+2$} 
+
+由于交错偏离点按符号交替出现，
+故可从中依次选取
+$n+2$
+个点构成一组交错点。
+由充分性部分，
+$p$
+即为最佳逼近。
+
+\item \textbf{交错偏离点有无穷个}记若交错偏离点有无穷多个。记
+$$
+E_+=\{x\in[a,b]:r(x)=M\},\qquad
+E_-=\{x\in[a,b]:r(x)=-M\}.
+$$
+
+由于 $r$ 连续，而 $\{M\},\{-M\}$ 为闭集，因此
+$$
+E_+=r^{-1}(\{M\}),\qquad
+E_-=r^{-1}(\{-M\})
+$$
+均为闭集，从而为紧集。
+
+由于交错偏离点无穷多个，因此在区间 $[a,b]$ 中，$E_+$ 与 $E_-$ 必无限次交替出现。
+
+先取
+$$
+x_1=\min(E_+\cup E_-).
+$$
+不妨设
+$$
+r(x_1)=M.
+$$
+
+由于交错偏离点无穷多个，因此集合
+$$
+\{x>x_1:x\in E_-\}
+$$
+非空。又因为 $E_-$ 为闭集，所以该集合在 $[a,b]$ 中取到最小元。定义
+$$
+x_2=\min\{x>x_1:x\in E_-\}.
+$$
+于是
+$$
+x_1<x_2,\qquad r(x_2)=-M.
+$$
+
+同理，由于交错偏离点无穷多个，集合
+$$
+\{x>x_2:x\in E_+\}
+$$
+非空，并且取到最小元。定义
+$$
+x_3=\min\{x>x_2:x\in E_+\}.
+$$
+于是
+$$
+x_2<x_3,\qquad r(x_3)=M.
+$$
+
+继续递归构造：
+若已定义
+$$
+x_k,
+$$
+则定义
+$$
+x_{k+1}
+=
+\min\{x>x_k:x\in E_{\sigma_{k+1}}\},
+$$
+其中
+$$
+\sigma_{k+1}=
+\begin{cases}
++,& r(x_k)=-M,\\
+-,& r(x_k)=M.
+\end{cases}
+$$
+
+由于交错偏离点无穷多个，上述过程不会在有限步停止。
+
+因此可得到
+$$
+x_1<x_2<\cdots<x_{n+2}
+$$
+满足
+$$
+r(x_i)=(-1)^iM.
+$$
+
+故已经存在不少于 $n+2$ 个交错偏离点。
+\end{enumerate}
+\end{proof}

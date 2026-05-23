@@ -1,0 +1,159 @@
+\subsection{半无穷区间上的推广：Baskakov 与 Mirakyan 算子}
+
+\subsubsection{Baskakov 线性正算子序列}
+
+研究完闭区间 $[0,1]$ 上的 Weierstrass 第一逼近定理和 Bernstein 多项式后，一个自然的想法是：如果函数定义在半无穷区间 $[0, +\infty)$ 上，我们是否还能构造类似的函数列来一致逼近？这里单纯使用多项式是做不到的，需要引入一些更复杂的构造。
+
+Baskakov 在 1957 年提出了如下线性正算子序列：
+\[
+\mathcal{B}_n(f;x) = \sum_{k=0}^{\infty} f\left( \frac{k}{n} \right) \binom{n+k-1}{k} x^k (1+x)^{-n-k},
+\]
+其中 $x \in [0, +\infty)$。这个构造的直观动机依然与概率论密切相关。在 Bernstein 多项式中，我们利用的是二项分布；而这里的核函数 $b_{n,k}(x) = \binom{n+k-1}{k} x^k (1+x)^{-n-k}$，本质上是取成功概率 $p = \frac{1}{1+x}$ 后的\textbf{负二项分布}。这意味着我们仍然在对函数 $f$ 进行某种“加权平均”，只不过求和是在无穷级数上进行的。
+
+为了证明该算子一致收敛到 $f(x)$，我们需要建立类似于 Bernstein 多项式情形下的组合恒等式。首先，考虑广义二项式定理：当 $|z| < 1$ 时，
+\[
+(1-z)^{-n} = \sum_{k=0}^{\infty} \binom{n+k-1}{k} z^k.
+\]
+对这一展开式可作如下理解：
+\[
+(1-z)^{-n} = \left( \sum_{m=0}^{\infty} z^m \right)^n = \sum_{k=0}^{\infty} \binom{n+k-1}{k} z^k.
+\]
+基于此，我们通过对 $z$ 求导建立三个关键引理。
+
+\begin{lemma}
+\label{lem:baskakov1}
+\[
+\sum_{k=0}^{\infty} \binom{n+k-1}{k} x^k (1+x)^{-n-k} = 1.
+\]
+\end{lemma}
+\begin{proof}
+令 $z = \frac{x}{1+x}$（当 $x \geq 0$ 时 $0 \leq z < 1$），由广义二项式定理有 $\sum_{k=0}^{\infty} \binom{n+k-1}{k} z^k = (1-z)^{-n}$。两边同乘 $(1+x)^{-n}$ 并代回 $z$ 即得。该引理表明算子具有单位性。
+\end{proof}
+
+\begin{lemma}
+\label{lem:baskakov2}
+\[
+\sum_{k=0}^{\infty} k \binom{n+k-1}{k} x^k (1+x)^{-n-k} = nx.
+\]
+\end{lemma}
+\begin{proof}
+对广义二项式定理两边关于 $z$ 求导，得 $n(1-z)^{-n-1} = \sum_{k=0}^{\infty} k \binom{n+k-1}{k} z^{k-1}$。两边同乘 $z(1+x)^{-n}$ 并代入 $z = \frac{x}{1+x}$ 即得。
+\end{proof}
+
+\begin{lemma}
+\label{lem:baskakov3}
+\[
+\sum_{k=0}^{\infty} k^2 \binom{n+k-1}{k} x^k (1+x)^{-n-k} = n(n+1)x^2 + nx.
+\]
+\end{lemma}
+\begin{proof}
+对引理 \ref{lem:baskakov2} 对应的 $z$ 恒等式再次关于 $z$ 求导并同乘 $z$，或利用二阶导数性质即可导出。
+\end{proof}
+
+有了上述工具，我们可以仿照 Weierstrass 定理的证明思路，估计算子与 $f(x)$ 之间的偏差。
+
+首先，利用引理 \ref{lem:baskakov1}--\ref{lem:baskakov3}，得到如下组合恒等式：
+\begin{align*}
+\sum_{k=0}^{\infty} (k-nx)^2 b_{n,k}(x)
+&= \sum_{k=0}^{\infty} k^2 b_{n,k}(x) - 2nx \sum_{k=0}^{\infty} k b_{n,k}(x) + n^2x^2 \sum_{k=0}^{\infty} b_{n,k}(x) \\
+&= [n(n+1)x^2 + nx] - 2nx(nx) + n^2x^2 \\
+&= nx(1+x).
+\end{align*}
+
+下面考虑在任意给定的闭区间 $[0, a]$ 上的一致收敛性。设 $f(x)$ 在该区间上连续且有界（$|f(x)| \leq M$）。由一致连续性，对任给 $\epsilon > 0$，存在 $\delta > 0$，使得当 $|k/n - x| < \delta$ 时，有 $|f(k/n) - f(x)| < \epsilon$。
+
+将求和按 $|k/n - x| < \delta$ 和 $|k/n - x| \geq \delta$ 分为两部分进行估计：
+\begin{align*}
+\left| \sum_{k=0}^{\infty} f\left(\frac{k}{n}\right) b_{n,k}(x) - f(x) \right|
+&= \left| \sum_{k=0}^{\infty} [f(k/n) - f(x)] b_{n,k}(x) \right| \\
+&\leq \sum_{|k/n - x| < \delta} \left|[f(k/n) - f(x)] b_{n,k}(x) \right| + \sum_{|k/n - x| \geq \delta} \left|[f(k/n) - f(x)] b_{n,k}(x) \right| \\
+&< \epsilon \sum_{k=0}^{\infty} b_{n,k}(x) + \frac{2M}{n^2\delta^2} \sum_{k=0}^{\infty} (k-nx)^2 b_{n,k}(x) \\
+&= \epsilon + \frac{2M \cdot nx(1+x)}{n^2\delta^2} = \epsilon + \frac{2Mx(1+x)}{n\delta^2}.
+\end{align*}
+
+在区间 $[0, a]$ 上，$x(1+x) \leq a(1+a)$ 有界。因此对于选定的 $\epsilon$ 和 $\delta$，只要 $n$ 足够大，使得 $n > \frac{2Ma(1+a)}{\epsilon\delta^2}$，偏差就能控制在 $2\epsilon$ 以内。这与 Bernstein 多项式的情形非常类似，本质上都是通过分段估计来控制误差。当然，也可以用 Korovkin 定理来处理这一问题。
+
+综上所述，算子序列 $\mathcal{B}_n(f;x)$ 在 $[0, a]$ 上一致收敛到 $f(x)$。
+
+\subsubsection{Mirakyan 算子序列}
+
+设 $f$ 是 $\mathbb{R}$ 上的连续函数。定义 Mirakyan 算子序列
+\[
+M_n(f;x) = \sum_{k=0}^{\infty} f\left(\frac{k}{n}\right) \frac{n^k}{k!} x^k e^{-nx},
+\]
+下面证明 $M_n(f;x)$ 在任意闭区间 $[0, a]$ 上一致收敛于 $f$。
+
+核函数 $\dfrac{(nx)^k}{k!}e^{-nx}$ 即为 Poisson 分布取参数 $\lambda = nx$ 的概率质量函数。Poisson 分布与二项分布关系密切：在 Weierstrass 第一逼近定理中，我们通过二项分布构造了 Bernstein 多项式 $B_n^f(x) = \sum_{k=0}^{n} f(\frac{k}{n}) \binom{n}{k} x^k (1-x)^{n-k}$，而这里相当于将核函数替换为 Poisson 分布。注意到 Poisson 极限公式
+\[
+\lim_{m \to \infty} \binom{m}{k} \left(\frac{nx}{m}\right)^k \left(1 - \frac{nx}{m}\right)^{m-k} = \frac{(nx)^k}{k!} e^{-nx},
+\]
+因此 Mirakyan 算子的收敛性也可以用来证明 Weierstrass 第一逼近定理。
+
+由 $f$ 在 $[0,a]$ 上的一致连续性，$\forall \epsilon >0,\exists \delta>0$，使得当 $|x-y|<\delta$ 且 $x,y \in [0,a]$ 时，$|f(x)-f(y)|<\epsilon$。与 Weierstrass 定理的证明类似，这里同样有一个基本恒等式：
+\[
+\sum_{k=0}^{\infty} \frac{n^k}{k!} x^k e^{-nx} = 1.
+\]
+这由指数函数的 Taylor 展开可直接验证：
+\[
+\sum_{k=0}^{\infty} \frac{n^k}{k!} x^k e^{-nx}
+= e^{-nx} \sum_{k=0}^{\infty} \frac{(nx)^k}{k!}
+= e^{-nx} \cdot e^{nx} = 1.
+\]
+
+令 $|M_n(f;x)-f(x)| = \left|\sum_{k=0}^{\infty} \left(f\left(\frac{k}{n}\right) - f(x)\right)\frac{n^k}{k!} x^k e^{-nx}\right|$，则
+\begin{align*}
+|M_n(f;x)-f(x)|
+&= \left| \left(\sum_{|k/n - x| < \delta} + \sum_{|k/n - x| \geq \delta}\right) \left(f\left(\frac{k}{n}\right) - f(x)\right) \frac{n^k}{k!} x^k e^{-nx} \right|.
+\end{align*}
+
+对于第一部分，利用一致连续性，
+\begin{align*}
+\left| \sum_{|k/n - x| < \delta} \left(f\left(\frac{k}{n}\right) - f(x)\right) \frac{n^k}{k!} x^k e^{-nx} \right|
+&\leq \sum_{|k/n - x| < \delta} \left| f\left(\frac{k}{n}\right) - f(x) \right| \frac{n^k}{k!} x^k e^{-nx} \\
+&\leq \sum_{k=0}^{\infty} \epsilon \frac{n^k}{k!} x^k e^{-nx}
+= \epsilon \sum_{k=0}^{\infty} \frac{n^k}{k!} x^k e^{-nx} = \epsilon.
+\end{align*}
+
+对于第二部分，由于 $f$ 在 $[0,a]$ 上连续故有界，设 $\|f\| \leq M$，则 $|f(\frac{k}{n}) - f(x)| \leq 2M$。于是
+\begin{align*}
+\left| \sum_{|k/n - x| \geq \delta} \left(f\left(\frac{k}{n}\right) - f(x)\right) \frac{n^k}{k!} x^k e^{-nx} \right|
+&\leq \sum_{|k/n - x| \geq \delta} 2M \frac{n^k}{k!} x^k e^{-nx}.
+\end{align*}
+
+由条件 $|\frac{k-nx}{n}| \geq \delta$ 可得 $(k-nx)^2 \geq (n\delta)^2$，因此
+\begin{align*}
+\sum_{|k/n - x| \geq \delta} 2M \frac{n^k}{k!} x^k e^{-nx}
+&\leq \sum_{k=0}^{\infty} \frac{(k-nx)^2}{(n\delta)^2} 2M \frac{n^k}{k!} x^k e^{-nx} \\
+&= \frac{2M}{n^2\delta^2} \sum_{k=0}^{\infty} (k-nx)^2 \frac{n^k}{k!} x^k e^{-nx}.
+\end{align*}
+
+为计算上述求和，利用指数函数幂级数的性质：
+\[
+\sum_{k=0}^{\infty} \frac{x^k}{k!} = e^x,
+\]
+\[
+\sum_{k=0}^{\infty} k \cdot \frac{x^k}{k!}
+= \sum_{k=1}^{\infty} \frac{x^k}{(k-1)!}
+= \sum_{l=0}^{\infty} \frac{x^{l+1}}{l!}
+= x e^{x},
+\]
+\[
+\sum_{k=0}^{\infty} k^2 \frac{x^k}{k!}
+= \sum_{k=1}^{\infty} k \cdot \frac{x^k}{(k-1)!}
+= \sum_{k=1}^{\infty} (k-1) \cdot \frac{x^k}{(k-1)!} + \sum_{k=1}^{\infty} \frac{x^k}{(k-1)!}
+= x^2 e^x + x e^x.
+\]
+
+代入可得
+\begin{align*}
+\frac{2M}{n^2\delta^2} \sum_{k=0}^{\infty} (k-nx)^2 \frac{n^k}{k!} x^k e^{-nx}
+&= \frac{2M}{n^2\delta^2} \sum_{k=0}^{\infty} (k^2 - 2nxk + n^2x^2) \frac{n^k}{k!} x^k e^{-nx} \\
+&= \frac{2M}{n^2\delta^2} \left( (nx)^2 e^{nx} + (nx) e^{nx} - 2nx(nx) e^{nx} + (nx)^2 e^{nx} \right) e^{-nx} \\
+&= \frac{2Mx}{n\delta^2}.
+\end{align*}
+
+取 $N = \left[\frac{2Ma}{\epsilon \delta^2}\right]+1$，则当 $n > N$ 时，上式小于 $\epsilon$。综合两部分估计，得到
+\[
+|M_n(f;x)-f(x)| < 2\epsilon
+\]
+对任意 $x \in [0,a]$ 成立。因此 $M_n(f;x)$ 在 $[0,a]$ 上一致收敛于 $f(x)$。

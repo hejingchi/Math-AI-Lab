@@ -1,0 +1,215 @@
+% !TEX root = ../main.tex
+\section{从对偶问题回到原问题}
+
+\subsection{对偶问题的矩阵形式}
+
+回顾硬间隔SVM的对偶问题
+\begin{equation}
+\begin{aligned}
+\min_{\alpha}\quad & \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}
+\alpha_i\alpha_j y_i y_j(x_i\cdot x_j) - \sum_{i=1}^{N}\alpha_i \\
+\text{s.t.}\quad & \sum_{i=1}^{N}\alpha_i y_i = 0 \\
+& \alpha_i \geqslant 0
+\end{aligned}
+\end{equation}
+
+注意到系数 $y_i y_j(x_i\cdot x_j)$ 仅与训练数据有关，与优化变量 $\alpha$ 无关，
+因此可以预先把这一部分计算出来。
+
+数据集 $X$ 是 $N\times d$ 的矩阵，标签 $y$ 是 $N\times 1$ 的列向量。
+定义
+\begin{equation}
+G_X = XX^T
+\end{equation}
+为数据的Gram矩阵，而
+\begin{equation}
+G_Y = yy^T
+\end{equation}
+给出了标签之间的符号关系矩阵（元素为 $\pm 1$）。
+令
+\begin{equation}
+G = G_X \circ G_Y
+\end{equation}
+为二者的Hadamard乘积，则目标函数可写为简洁的二次型
+\begin{equation}
+\boxed{
+f(\alpha) = \frac{1}{2}\alpha^T G\alpha - \mathbf{1}^T\alpha
+}
+\end{equation}
+其中 $G$ 是实对称矩阵，$\mathbf{1}$ 是全1向量。
+
+梯度为
+\begin{equation}
+\boxed{\nabla f(\alpha) = G\alpha - \mathbf{1}}
+\end{equation}
+
+约束条件为
+\begin{equation}
+y^T\alpha = 0,\quad \alpha_i \geqslant 0
+\end{equation}
+
+\subsection{从对偶解恢复原问题的解}
+
+假设我们已经通过某种优化算法求得了对偶问题的最优解 $\alpha^*$。
+现在需要将其转化为原问题的参数 $w^*$ 和 $b^*$。
+
+\subsubsection{求解 $w^*$}
+
+由KKT条件中的驻点条件 $\nabla_w L = 0$，我们已在推导对偶问题时得到
+\begin{equation}
+\boxed{w^* = \sum_{i=1}^{N}\alpha_i^* y_i x_i}
+\end{equation}
+直接代入即可。
+
+\subsubsection{求解 $b^*$}
+
+$b^*$ 的求解稍复杂一些。首先，$\alpha^*$ 不能为零向量，否则 $w^*=0$，
+分类函数 $f(x)=\text{sign}(w^*x+b)$ 退化。因此至少存在某个 $\alpha_j^* > 0$。
+
+对满足 $\alpha_j^* > 0$ 的样本点，由互补松弛条件 $\alpha_j^* c_j(w^*,b^*) = 0$ 得
+\begin{equation}
+c_j(w^*,b^*) = 0
+\quad\Longrightarrow\quad
+1 - y_j(w^*\cdot x_j + b^*) = 0
+\end{equation}
+
+代入 $w^*$ 的表达式
+\begin{equation}
+1 = y_j\left(\sum_{i=1}^{N}\alpha_i^* y_i(x_i\cdot x_j) + b^*\right)
+\end{equation}
+
+利用 $y_j^2 = 1$，解得
+\begin{equation}
+\begin{aligned}
+b^* &= y_j - \sum_{i=1}^{N}\alpha_i^* y_i(x_i\cdot x_j) \\
+&= y_j\left(1 - \sum_{i=1}^{N}\alpha_i^* G_{ij}\right)
+\end{aligned}
+\end{equation}
+
+或等价地
+\begin{equation}
+\boxed{b^* = y_j(1 - w^*\cdot x_j),\quad \text{其中}\ \alpha_j^* > 0}
+\end{equation}
+
+至此，从对偶解恢复原问题参数的完整公式已给出。
+
+\subsection{投影梯度法的引入}
+
+现在关键的问题是：如何在约束 $y^T\alpha = 0$，$\alpha_i \geqslant 0$ 下求解 $\alpha$ 的极小值？
+
+一个自然的思路是采用投影梯度法。对目标函数求梯度得 $\nabla f = G\alpha - \mathbf{1}$，
+沿负梯度方向更新：
+\begin{equation}
+\alpha^{\text{new}} = \alpha - \eta\nabla f(\alpha)
+\end{equation}
+其中 $\eta > 0$ 为学习率。
+
+但梯度步之后，更新点不一定满足约束。因此需要将点投影回可行域。
+
+\subsection{两种投影顺序}
+
+可行域由两个约束集合的交集构成：
+\begin{itemize}
+\item 等式约束：$y^T\alpha = 0$（一个超平面）
+\item 不等式约束：$\alpha_i \geqslant 0$（第一象限）
+\end{itemize}
+
+我们自然想到：分两步，分别投影到这两个集合上。但顺序有两种可能。
+
+\subsubsection{思路一：先非负截断，再投影到超平面}
+
+\begin{equation}
+\begin{aligned}
+\alpha^{\text{pos}} &= \max\{\alpha^{\text{new}},\;0\} \\
+\alpha^{\text{final}} &= \alpha^{\text{pos}}
+   - \frac{y^T\alpha^{\text{pos}}}{y^Ty}\,y
+\end{aligned}
+\end{equation}
+
+\subsubsection{思路二：先投影到超平面，再非负截断}
+
+\begin{equation}
+\begin{aligned}
+\alpha^{\text{proj}} &= \alpha^{\text{new}}
+   - \frac{y^T\alpha^{\text{new}}}{y^Ty}\,y \\
+\alpha^{\text{final}} &= \max\{\alpha^{\text{proj}},\;0\}
+\end{aligned}
+\end{equation}
+
+\subsection{投影公式的推导}
+
+投影到超平面 $y^T\alpha = 0$ 的公式推导如下。
+
+将向量 $\alpha$ 分解为平行于超平面的分量 $\alpha_{\parallel}$ 和垂直于超平面的分量 $\alpha_{\perp}$：
+\begin{equation}
+\alpha = \alpha_{\parallel} + \alpha_{\perp}
+\end{equation}
+
+其中 $\alpha_{\perp}$ 沿法向量 $y$ 方向，故存在 $\lambda\in\mathbb{R}$ 使得
+$\alpha_{\perp} = \lambda y$。于是
+\begin{equation}
+\alpha = \alpha_{\parallel} + \lambda y
+\end{equation}
+
+两边左乘 $y^T$，并利用 $y^T\alpha_{\parallel}=0$（平行分量在超平面上），得
+\begin{equation}
+y^T\alpha = \lambda\,y^Ty
+\quad\Longrightarrow\quad
+\lambda = \frac{y^T\alpha}{y^Ty}
+\end{equation}
+
+因此
+\begin{equation}
+\alpha_{\perp} = \frac{y^T\alpha}{y^Ty}\,y
+\end{equation}
+
+投影到超平面的分量为
+\begin{equation}
+\boxed{\alpha_{\parallel} = \alpha - \frac{y^T\alpha}{y^Ty}\,y}
+\end{equation}
+
+注意到 $y^Ty = N$（因为 $y_i = \pm 1$），故分母即为 $N$。
+
+\subsection{两种思路的对比}
+
+两种投影顺序的几何意义都很直观：梯度下降让参数沿目标函数下降最快的方向移动，
+但可能离开约束区域，因此需要投影回去。
+
+然而，经过计算机实验发现：\textbf{思路二（先投影超平面，再非负截断）的数值稳定性更好。}
+原因是：思路一中，第二步投影到超平面时需减去沿 $y$ 方向的分量，
+可能将某些已截断为 $0$ 的 $\alpha_i$ 再次拉成负数，破坏非负性。
+
+这一观察隐含了一个关键信息：\textbf{支撑向量是核心概念，必须强制保证 $\alpha \geqslant 0$。}
+最后一步取正，相当于守住了可行域的底线。
+
+\subsection{算法的整体流程}
+
+综合以上推导，投影梯度法求解硬间隔SVM的完整流程为：
+
+\begin{equation}
+\boxed{
+\begin{aligned}
+G_X &= XX^T \\
+G_Y &= yy^T \\
+G   &= G_X \circ G_Y \\
+f(\alpha) &= \frac{1}{2}\alpha^T G\alpha - \mathbf{1}^T\alpha \\
+\nabla f(\alpha) &= G\alpha - \mathbf{1} \\
+\alpha &\leftarrow \text{Project}\big(\alpha - \eta\nabla f(\alpha)\big) \\
+w^* &= \sum_{i=1}^{N}\alpha_i y_i x_i \\
+b^* &= y_j(1 - w^*\cdot x_j),\quad \alpha_j > 0
+\end{aligned}}
+\end{equation}
+
+\subsection{方法缺陷与改进方向}
+
+上述投影梯度法虽然直观，但存在明显的理论缺陷：
+\begin{itemize}
+\item 单次顺序投影（无论先做哪个）都不能保证同时满足两个约束。
+  要得到严格落在可行域内的点，需要交替投影多次直至收敛，
+  或采用专门设计的算法（如SMO）。
+\item 收敛性缺乏严格保证（在不使用交替投影时）。
+\item 学习率的选择对结果影响很大，需要仔细分析。
+\end{itemize}
+
+后续两章将分别讨论学习率的选取理论依据（第四章）和算法的收敛性分析（第五章），
+并在其中给出交替投影的修正方案。

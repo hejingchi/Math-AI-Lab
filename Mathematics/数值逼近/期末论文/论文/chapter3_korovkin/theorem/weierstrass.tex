@@ -1,0 +1,106 @@
+\subsection{Weierstrass 第一逼近定理与 Bernstein 多项式}
+
+Weierstrass 第一逼近定理断言：闭区间上的任何连续函数都能用一列多项式一致逼近。用数学语言描述，就是
+\[
+\forall \epsilon > 0,\ \exists N,\ \forall n \geq N,\ \forall x \in [a, b],\ |f(x) - p_n(x)| < \epsilon,
+\]
+其中 $\{p_n(x)\}$ 是一列多项式。下面给出具体证明。
+
+我们先考虑 $f(x)$ 在闭区间 $[0,1]$ 上的情形。使用 Bernstein 多项式来构造逼近函数：
+\[
+B_n^f(x) = \sum_{k=0}^{n} f\left(\frac{k}{n}\right) \binom{n}{k} x^k (1-x)^{n-k}.
+\]
+构造的动机与概率论中的二项分布密切相关：进行 $n$ 次独立试验，每次成功概率为 $p$，成功 $k$ 次的概率为
+\[
+P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}.
+\]
+当 $k$ 接近 $np$ 时概率最大。因此 $B_n^f(x)$ 相当于对 $f$ 在 $k/n\approx x$ 处的取值进行加权平均，使得 $B_n^f(x)$ 能更好地逼近 $f(x)$。
+
+为证明一致收敛，需要以下组合恒等式。
+
+\begin{lemma}
+\[
+\sum_{k=0}^{n} \binom{n}{k} u^k v^{n-k} = (u + v)^n.
+\]
+\end{lemma}
+\begin{lemma}
+\[
+\sum_{k=0}^{n} k \binom{n}{k} u^k v^{n-k} = nu(u + v)^{n-1}.
+\]
+\end{lemma}
+\begin{lemma}
+\[
+\sum_{k=0}^{n} k^2 \binom{n}{k} u^k v^{n-k} = nu(u+v)^{n-1} + n(n-1)u^2(u+v)^{n-2}.
+\]
+\end{lemma}
+
+这些可由二项式定理对 $u$ 求导得到。特别地，取 $u=v=1$ 可得推论：
+\[
+\sum_{k=0}^{n} k \binom{n}{k} = n \cdot 2^{n-1},\qquad
+\sum_{k=0}^{n} k^2 \binom{n}{k} = n(n+1)2^{n-2}.
+\]
+
+代入 $u=x,\ v=1-x$，由引理1得
+\[
+\sum_{k=0}^{n} \binom{n}{k} x^k (1-x)^{n-k} = 1,
+\]
+并可计算出关键的方差型求和：
+\begin{align*}
+\sum_{k=0}^{n} (k-nx)^2 \binom{n}{k} x^k (1-x)^{n-k}
+&= \sum_{k=0}^{n} k^2 \binom{n}{k} x^k (1-x)^{n-k} \\
+&\quad - 2nx\sum_{k=0}^{n} k\binom{n}{k}x^k(1-x)^{n-k} + n^2x^2\sum_{k=0}^{n}\binom{n}{k}x^k(1-x)^{n-k} \\
+&= [nx + n(n-1)x^2] - 2nx\cdot(nx) + n^2x^2 \\
+&= nx(1-x).
+\end{align*}
+
+现在证明 $B_n^f(x)$ 一致收敛于 $f(x)$。
+
+\begin{proof}
+由于 $f$ 在 $[0,1]$ 上连续，故一致连续：
+\[
+\forall \epsilon>0,\ \exists\delta>0,\ \forall x,y\in[0,1],\ |x-y|<\delta \Rightarrow |f(x)-f(y)|<\epsilon.
+\]
+利用 $\sum_{k=0}^{n} \binom{n}{k} x^k (1-x)^{n-k} = 1$，可将 $f(x)$ 改写为
+\[
+f(x) = \sum_{k=0}^{n} f(x) \binom{n}{k} x^k (1-x)^{n-k},
+\]
+于是
+\[
+B_n^f(x)-f(x) = \sum_{k=0}^{n} \left(f\left(\frac{k}{n}\right)-f(x)\right) \binom{n}{k} x^k (1-x)^{n-k}.
+\]
+按 $|k/n-x|<\delta$ 和 $\ge\delta$ 拆分估计。
+
+当 $|k/n-x|<\delta$ 时，$|f(k/n)-f(x)|<\epsilon$，故
+\[
+\left|\sum_{|k/n-x|<\delta} \cdots \right|
+\le \sum_{|k/n-x|<\delta} \epsilon \binom{n}{k} x^k (1-x)^{n-k}
+\le \epsilon \sum_{k=0}^{n} \binom{n}{k} x^k (1-x)^{n-k} = \epsilon.
+\]
+
+当 $|k/n-x|\ge\delta$ 时，设 $|f(x)|\le M$，则 $|f(k/n)-f(x)|\le 2M$。利用 $(k-nx)^2 \ge n^2\delta^2$ 放大：
+\[
+\left|\sum_{|k/n-x|\ge\delta} \cdots \right|
+\le \frac{2M}{n^2\delta^2} \sum_{k=0}^{n} (k-nx)^2 \binom{n}{k} x^k (1-x)^{n-k}
+= \frac{2M}{n^2\delta^2}\cdot nx(1-x).
+\]
+因为 $x(1-x)\le 1/4$，上式 $\le \frac{M}{2n\delta^2}$。
+
+综合两部分得
+\[
+|B_n^f(x)-f(x)| < \epsilon + \frac{M}{2n\delta^2}.
+\]
+取 $N > \frac{M}{2\epsilon\delta^2}$，则当 $n>N$ 时 $|B_n^f(x)-f(x)| < 2\epsilon$，故 $B_n^f(x)$ 在 $[0,1]$ 上一致收敛于 $f(x)$。
+\end{proof}
+
+对于一般闭区间 $[a,b]$ 上的连续函数 $f(x)$，通过线性变换
+\[
+g(t) = f(a+(b-a)t),\quad t\in[0,1],
+\]
+将问题化归到 $[0,1]$ 上。$g(t)$ 仍连续，存在 Bernstein 多项式 $B_n^g(t)$ 一致收敛于 $g(t)$。将 $t=\frac{x-a}{b-a}$ 代回，得到
+\[
+B_n^f(x) = B_n^g\!\left( \frac{x-a}{b-a} \right)
+= \sum_{k=0}^{n} f\!\left( a+\frac{k}{n}(b-a) \right)
+\binom{n}{k} \left( \frac{x-a}{b-a} \right)^{\!k}
+\left( 1-\frac{x-a}{b-a} \right)^{\!n-k},
+\]
+它在 $[a,b]$ 上一致收敛于 $f(x)$。这就完成了 Weierstrass 第一逼近定理的完整证明。

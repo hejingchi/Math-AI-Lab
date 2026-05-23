@@ -1,0 +1,84 @@
+\subsection{Fejér 算子与 Weierstrass 第二逼近定理}
+
+Weierstrass 第二逼近定理断言：任何以 $2\pi$ 为周期的连续函数都能用一列三角多项式一致逼近。
+Fejér 给出了一个构造性的证明，其核心是对傅里叶级数的部分和取算术平均。
+
+设 $f\in C_{2\pi}$，其傅里叶级数的前 $n+1$ 个部分和为 $S_0(f,x),S_1(f,x),\dots ,S_n(f,x)$。
+定义
+\[
+\sigma_n(f,x)=\frac{S_0(f,x)+S_1(f,x)+\cdots +S_n(f,x)}{n+1},
+\]
+称为 \textbf{Fejér 算子}。每个 $\sigma_n(f,x)$ 都是次数不超过 $n$ 的三角多项式。
+
+由傅里叶级数理论，部分和可表示为 Dirichlet 核的卷积：
+\[
+S_k(f,x)=\frac1\pi\int_{-\pi}^{\pi}f(x-t)D_k(t)\,dt,\qquad 
+D_k(t)=\frac{\sin\bigl((k+\frac12)t\bigr)}{2\sin\frac{t}{2}}.
+\]
+代入平均得
+\[
+\sigma_n(f,x)=\frac1\pi\int_{-\pi}^{\pi}f(x-t)\mathcal{F}_n(t)\,dt,
+\]
+其中
+\[
+\mathcal{F}_n(t)=\frac1{n+1}\sum_{k=0}^{n}D_k(t)
+=\frac{1}{2(n+1)}\frac{\sin^2\!\bigl(\frac{n+1}{2}t\bigr)}{\sin^2\frac{t}{2}}
+\]
+称为 \textbf{Fejér 核}。它有两个基本性质：
+\[
+\mathcal{F}_n(t)\ge 0,\qquad 
+\frac1\pi\int_{-\pi}^{\pi}\mathcal{F}_n(t)\,dt=1.
+\]
+非负性来自表达式中分子分母均非负，归一性则因为每个 $D_k$ 的积分为 $\pi$。
+
+下面证明 $\sigma_n(f,x)$ 一致收敛于 $f(x)$，证明结构与 Bernstein 多项式的情形完全平行。
+
+\begin{proof}
+由于 $f\in C_{2\pi}$，它在 $\mathbb{R}$ 上一致连续：
+\[
+\forall\varepsilon>0,\ \exists\delta>0,\ \forall x,y:\ |x-y|<\delta\Rightarrow |f(x)-f(y)|<\varepsilon.
+\]
+利用归一化条件，将 $f(x)$ 写成积分形式：
+\[
+f(x)=\frac1\pi\int_{-\pi}^{\pi}f(x)\mathcal{F}_n(t)\,dt,
+\]
+于是
+\[
+\sigma_n(f,x)-f(x)=\frac1\pi\int_{-\pi}^{\pi}\bigl[f(x-t)-f(x)\bigr]\mathcal{F}_n(t)\,dt.
+\]
+将积分区间按 $|t|<\delta$ 和 $\delta\le|t|\le\pi$ 拆成两部分。
+
+\textbf{第一部分} $|t|<\delta$。此时 $|f(x-t)-f(x)|<\varepsilon$，结合 $\mathcal{F}_n(t)\ge0$，
+\[
+\frac1\pi\biggl|\int_{|t|<\delta}\bigl[f(x-t)-f(x)\bigr]\mathcal{F}_n(t)\,dt\biggr|
+\le\frac\varepsilon\pi\int_{|t|<\delta}\mathcal{F}_n(t)\,dt
+\le\frac\varepsilon\pi\int_{-\pi}^{\pi}\mathcal{F}_n(t)\,dt=\varepsilon.
+\]
+
+\textbf{第二部分} $\delta\le|t|\le\pi$。设 $M=\|f\|_\infty$，则 $|f(x-t)-f(x)|\le2M$。此时分母满足 $\sin^2\frac{t}{2}\ge\sin^2\frac\delta2$，故
+\[
+\mathcal{F}_n(t)=\frac{1}{2(n+1)}\frac{\sin^2\bigl(\frac{n+1}{2}t\bigr)}{\sin^2\frac{t}{2}}
+\le\frac{1}{2(n+1)\sin^2\frac\delta2}.
+\]
+因此
+\[
+\frac1\pi\biggl|\int_{\delta\le|t|\le\pi}\bigl[f(x-t)-f(x)\bigr]\mathcal{F}_n(t)\,dt\biggr|
+\le\frac{2M}{\pi}\int_{\delta\le|t|\le\pi}\mathcal{F}_n(t)\,dt
+\le\frac{2M}{\pi}\cdot 2\pi\cdot\frac{1}{2(n+1)\sin^2\frac\delta2}
+=\frac{2M}{(n+1)\sin^2\frac\delta2}.
+\]
+
+综合两部分，对任意 $x$ 一致地有
+\[
+|\sigma_n(f,x)-f(x)|
+<\varepsilon+\frac{2M}{(n+1)\sin^2\frac\delta2}.
+\]
+取 $N$ 足够大，使得当 $n>N$ 时 $\frac{2M}{(n+1)\sin^2\frac\delta2}<\varepsilon$，则
+\[
+|\sigma_n(f,x)-f(x)|<2\varepsilon,
+\]
+故 $\sigma_n(f,x)$ 在 $[-\pi,\pi]$ 上一致收敛于 $f(x)$。由周期性，收敛在整个实轴上一致。
+\end{proof}
+
+以上证明充分体现了线性正算子与核的非负性在逼近论中的核心作用，与 Bernstein 多项式的证明如出一辙。
+

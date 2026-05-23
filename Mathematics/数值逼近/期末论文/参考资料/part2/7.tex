@@ -1,0 +1,63 @@
+\section{函数逼近的进一步理论（提纲）}
+
+本章概述后续将要建立的定量逼近理论，重点包括连续模、Jackson 定理、Bernstein 定理与 Zygmund 定理及其逆定理，并说明 Korovkin 定理如何为这些深刻结果奠定基础。
+
+\subsection{连续模与光滑性度量}
+\begin{definition}[连续模]
+设 $f\in C[a,b]$（或 $f\in C_{2\pi}$），定义 $f$ 的\textbf{连续模}为
+\[
+\omega(f,\delta) = \sup\{ |f(x)-f(y)| : x,y\in[a,b],\ |x-y|\le\delta \},\quad \delta>0.
+\]
+\end{definition}
+连续模刻画了函数的一致连续性程度：$\omega(f,\delta)\to 0$ 当 $\delta\to0$，且 Lipschitz 条件相当于 $\omega(f,\delta)=O(\delta^\alpha)$。连续模是研究逼近阶的基本工具。
+
+\subsection{最佳逼近的 Jackson 估计}
+\begin{theorem}[Jackson 定理，多项式情形]
+存在绝对常数 $C$，使得对任何 $f\in C[a,b]$ 和 $n\ge1$，
+\[
+e(f,P_n) \le C\,\omega\!\left(f,\frac{b-a}{n}\right).
+\]
+若 $f$ 具有高阶连续导数，还有更精细的估计。
+\end{theorem}
+
+\begin{theorem}[Jackson 定理，三角多项式情形]
+存在绝对常数 $C$，使得对任何 $f\in C_{2\pi}$ 和 $n\ge1$，
+\[
+e(f,T_n) \le C\,\omega\!\left(f,\frac{1}{n}\right).
+\]
+\end{theorem}
+
+Jackson 定理给出了用多项式（或三角多项式）逼近连续函数时，最佳逼近误差被连续模控制的上界。它从量上改进了 Weierstrass 定理，且证明常依赖于卷积型逼近算子（如 Jackson 算子）的构造，而 Korovkin 定理为这类算子的收敛性提供了定性保证——只需检验 $1,t,t^2$（或 $1,\cos,\sin$）即可，大大简化了 Jackson 算子一致收敛性的验证。
+
+\subsection{逆定理：Bernstein 定理}
+Jackson 定理说“光滑性好（连续模小）则逼近误差小”，逆问题自然成立：能否从逼近误差的衰减速度反推函数的光滑性？Bernstein 定理给出了肯定回答。
+
+\begin{theorem}[Bernstein 定理，多项式情形]
+若存在常数 $M$ 和 $\alpha\in(0,1)$ 使得对所有 $n$ 有 $e(f,P_n)\le M n^{-\alpha}$，则 $f\in C[a,b]$ 且 $\omega(f,\delta)=O(\delta^\alpha)$。特别地，若 $\alpha=1$，还可进一步得到 Lipschitz 条件的等价刻画。
+\end{theorem}
+
+\begin{theorem}[Bernstein 定理，三角多项式情形]
+若 $e(f,T_n)\le M n^{-\alpha}$ ($0<\alpha<1$)，则 $f\in C_{2\pi}$ 且 $\omega(f,\delta)=O(\delta^\alpha)$。
+\end{theorem}
+
+这类逆定理的证明通常依赖于多项式（或三角多项式）导数的 Bernstein 不等式，而 Korovkin 定理本身并不直接涉及逆定理，但它确立的正算子框架与矩条件为 Bernstein 不等式的应用提供了舞台。
+
+\subsection{Zygmund 定理与光滑函数类的刻画}
+对于更精细的光滑类（如 Lipschitz 类、Zygmund 类），Zygmund 定理给出了用逼近阶刻画的完整特征。
+
+\begin{theorem}[Zygmund]
+设 $f\in C_{2\pi}$，则 $f$ 属于 Zygmund 类（即满足 $|f(x+h)+f(x-h)-2f(x)|=O(h)$）当且仅当 $e(f,T_n)=O(1/n)$。
+\end{theorem}
+
+类似的结果在多项式逼近中也成立，且可以通过连续模的二阶模或 Peetre 的 $K$-泛函来统一处理。Zygmund 定理与 Bernstein 定理共同构成了光滑性（用连续模或函数类刻画）与逼近阶之间的等价关系。
+
+\subsection{Korovkin 定理的影响与意义}
+Korovkin 定理在上述理论中扮演着“起承转合”的角色：
+\begin{enumerate}
+    \item \textbf{定性基础}：它保证了一大类具体算子的收敛性，使得人们可以放心地设计具有良好计算性质的逼近算子（如 Jackson 算子、Bernstein 多项式、Baskakov 算子等）而不必每次从头证明收敛性。
+    \item \textbf{简化验证}：在 Jackson 型定理的证明中，构造的逼近算子往往是线性正算子，验证其一致收敛性只需检验三个测试函数，这正由 Korovkin 定理完成，从而可集中精力估计逼近阶。
+    \item \textbf{启发逆定理}：虽然 Korovkin 定理本身是定性的，但它凸显了测试函数 $1,t,t^2$ 的特殊地位，这些测试函数恰好与二阶连续模、导数估计等密切相关，为定量逆定理（Bernstein, Zygmund）提供了正确的出发点。
+    \item \textbf{统一视角}：Korovkin 定理涵盖了代数多项式逼近、三角多项式逼近，甚至可推广到抽象 Banach 空间中的正算子，使得不同领域（如概率型算子、卷积型算子）的逼近问题得以在一个框架下理解。
+\end{enumerate}
+
+后续内容将逐一展开上述定量定理的详细证明，并进一步探讨它们与连续模、二阶光滑模、$K$-泛函及函数空间理论的内在联系。

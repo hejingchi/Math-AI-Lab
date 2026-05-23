@@ -1,0 +1,202 @@
+% !TEX root = ../main.tex
+\section{投影梯度法的收敛性分析}
+
+\subsection{复合迭代算子}
+
+为严格分析算法的收敛性，将一轮迭代中的三个递推步骤统一写成一个复合算子
+$T: \mathbb{R}^N \to \mathbb{R}^N$。
+
+对于第 $k-1$ 步的迭代点 $\alpha_{k-1}$，单步更新为：
+
+\begin{enumerate}[label=步骤\arabic*:,leftmargin=*]
+\item \textbf{梯度下降步} $F$：
+\begin{equation}
+\beta_k = F(\alpha_{k-1}) = \alpha_{k-1} - \eta(G\alpha_{k-1} - \mathbf{1})
+\end{equation}
+其中 $F(x) = (I - \eta G)x + \eta\mathbf{1}$。
+
+\item \textbf{等式投影步} $P_H$：
+\begin{equation}
+\gamma_k = P_H(\beta_k) = \beta_k - \frac{1}{N}yy^T\beta_k
+\end{equation}
+
+\item \textbf{非负截断步} $P_+$：
+\begin{equation}
+\alpha_k = P_+(\gamma_k) = \max\{\gamma_k,\;0\}
+\end{equation}
+\end{enumerate}
+
+整个复合迭代算子为
+\begin{equation}
+\boxed{\alpha_k = T(\alpha_{k-1}) = (P_+ \circ P_H \circ F)(\alpha_{k-1})}
+\end{equation}
+
+\subsection{全局非扩张性证明}
+
+我们首先证明：对任意 $x,y\in\mathbb{R}^N$，算子 $T$ 满足非扩张性
+\begin{equation}
+\|T(x) - T(y)\| \leqslant \|x - y\|
+\end{equation}
+这一证明不依赖任何关于稳定点或收敛性的假设。
+
+\subsubsection{梯度步的收缩性}
+
+由第四章引理 \ref{lem:contraction} 及其在仿射映射上的推广，
+当 $\eta \leqslant 2/\lambda_{\max}(G)$ 时，对任意 $x,y$ 有
+\begin{equation}
+\boxed{\|F(x) - F(y)\|^2 \leqslant \|x - y\|^2} \tag{A}
+\end{equation}
+
+利用范数上界 $\lambda_{\max}(G) \leqslant \|G\| \leqslant M^2$，
+取 $\eta \leqslant 2/M^2$ 即可保证该条件成立。
+
+\subsubsection{等式投影步的收缩性}
+
+令 $v_x = F(x)$，$v_y = F(y)$，以及 $w = v_x - v_y$。
+等式投影的差为
+\begin{equation}
+P_H(v_x) - P_H(v_y)
+= (v_x - v_y) - \frac{1}{N}yy^T(v_x - v_y)
+= w - \frac{y^Tw}{N}y
+\end{equation}
+
+计算其模长平方：
+\begin{equation}
+\begin{aligned}
+\|P_H(v_x) - P_H(v_y)\|^2
+&= \left(w - \frac{y^Tw}{N}y\right)^T
+   \left(w - \frac{y^Tw}{N}y\right) \\
+&= w^Tw - \frac{2(y^Tw)}{N}y^Tw
+   + \frac{(y^Tw)^2}{N^2}y^Ty \\
+&= \|w\|^2 - \frac{2}{N}(y^Tw)^2 + \frac{1}{N}(y^Tw)^2 \\
+&= \|w\|^2 - \frac{1}{N}(y^Tw)^2
+\end{aligned}
+\end{equation}
+
+由于 $(y^Tw)^2 / N \geqslant 0$，得到
+\begin{equation}
+\boxed{\|P_H(v_x) - P_H(v_y)\|^2
+\leqslant \|v_x - v_y\|^2} \tag{B}
+\end{equation}
+
+等式投影是到超平面的正交投影，不仅非扩张，而且只要
+$y^Tw \neq 0$，距离会严格缩小。
+
+\subsubsection{非负截断步的收缩性}
+
+令 $u_x = P_H(v_x)$，$u_y = P_H(v_y)$。
+对比截断后各分量的平方差：
+\begin{equation}
+(P_+(u_x)_i - P_+(u_y)_i)^2
+= (\max\{u_{x,i},0\} - \max\{u_{y,i},0\})^2
+\end{equation}
+
+对于一维实数 $a,b$，不等式
+\begin{equation}
+(\max\{a,0\} - \max\{b,0\})^2 \leqslant (a-b)^2
+\end{equation}
+恒成立。分类验证如下：
+\begin{itemize}
+\item 若 $a \geqslant 0$，$b \geqslant 0$：等号成立。
+\item 若 $a < 0$，$b < 0$：左边为 $0$，右边 $(a-b)^2 \geqslant 0$，成立。
+\item 若 $a \geqslant 0$，$b < 0$：左边为 $a^2$，右边 $(a+|b|)^2 > a^2$，严格成立。
+\end{itemize}
+
+对所有分量求和，得
+\begin{equation}
+\boxed{\|P_+(u_x) - P_+(u_y)\|^2
+\leqslant \|u_x - u_y\|^2} \tag{C}
+\end{equation}
+
+\subsubsection{复合算子的非扩张性}
+
+将式 (A)、(B)、(C) 顺次相连，即得对任意 $x,y\in\mathbb{R}^N$：
+\begin{equation}
+\begin{aligned}
+\|T(x) - T(y)\|^2
+&\leqslant \|P_H(F(x)) - P_H(F(y))\|^2 \\
+&\leqslant \|F(x) - F(y)\|^2 \\
+&\leqslant \|x - y\|^2
+\end{aligned}
+\end{equation}
+
+因此
+\begin{equation}
+\boxed{\|T(x) - T(y)\| \leqslant \|x - y\|,\quad \forall x,y\in\mathbb{R}^N}
+\end{equation}
+
+即复合迭代算子 $T$ 是\textbf{全局非扩张}的。
+
+\subsection{稳定点（不动点）的存在性}
+
+在确立了算子 $T$ 的全局非扩张性之后，自然希望应用经典的不动点定理。
+
+\begin{theorem}[Browder不动点定理]
+设 $C \subset \mathbb{R}^N$ 是一个闭凸集，且映射 $T: C \to C$ 满足全局非扩张性。
+若迭代序列 $\{T^k(x_0)\}$ 有界，则算子 $T$ 在 $C$ 上必定存在至少一个不动点
+$\alpha^*$，使得 $\alpha^* = T(\alpha^*)$。
+\end{theorem}
+
+然而，需要指出的是：我们的映射 $T$ 并非从某个闭凸集映到自身。
+$T$ 的定义域是整个 $\mathbb{R}^N$，而Browder定理要求定义域为闭凸集且映射保持在该集合内。
+因此，\textbf{Browder不动点定理并不能直接应用于本算法}。
+
+我们无法从数学上严格证明 $T$ 在可行域上一定存在不动点。
+但是，利用Bolzano-Weierstrass定理，若迭代序列有界（这由梯度步的收缩性保证），
+则必然存在收敛子列，其极限点即为某个稳定点。
+尽管该稳定点不一定是对偶问题的最优解，但它至少是算法的一个可能的收敛目标。
+
+\begin{remark}
+实际计算中，序列是否收敛到真正的KKT点，取决于投影方式。
+若使用单次顺序投影，收敛到的可能只是一个“近似可行”的稳定点；
+若使用交替投影精确拉回到可行域，则极限点满足KKT条件的精度会大大提高。
+\end{remark}
+
+\subsection{距离单调递减性质}
+
+尽管无法严格证明不动点的存在性，但我们可以证明：\textbf{若稳定点 $\alpha^*$ 存在}，
+则迭代序列到该点的距离是单调递减的。
+
+假设存在稳定点 $\alpha^*$ 满足 $\alpha^* = T(\alpha^*)$。
+在第一部分已证的全局非扩张不等式中，取 $x = \alpha_{k-1}$，$y = \alpha^*$，
+得到
+\begin{equation}
+\|T(\alpha_{k-1}) - T(\alpha^*)\| \leqslant \|\alpha_{k-1} - \alpha^*\|
+\end{equation}
+
+即
+\begin{equation}
+\boxed{\|\alpha_k - \alpha^*\| \leqslant \|\alpha_{k-1} - \alpha^*\|}
+\end{equation}
+
+因此几何距离序列 $d_k = \|\alpha_k - \alpha^*\|$ 是一个\textbf{单调递减且有下界}
+（$\geqslant 0$）的实数序列。
+
+由实数域的单调有界原理，距离序列 $\{d_k\}$ 必定收敛。
+这意味着迭代序列 $\{\alpha_k\}$ 不会发散，其与稳定点的距离稳定在某个极限值。
+
+\begin{remark}
+上述分析与经典投影梯度法的收敛性理论一致：
+梯度步的收缩性加上投影算子的非扩张性，
+共同保证了算法在数值上的稳定行为。
+但需要强调的是，\textbf{只有在使用交替投影或精确投影时}，
+才能保证极限点真正落在可行域内；
+单次顺序投影只能保证极限点在可行域的某个邻域内。
+这也解释了为什么SMO算法通过坐标下降的方式
+天然保持等式约束，从而彻底避开了投影顺序的问题。
+\end{remark}
+
+\subsection{小结}
+
+本章严格证明了：
+\begin{enumerate}
+\item 复合算子 $T = P_+ \circ P_H \circ F$ 是全局非扩张的。
+\item 若稳定点存在，则迭代点到稳定点的距离单调递减，算法在数值上稳定。
+\item 经典不动点定理不能直接应用于本算法，严格收敛性需要更强的条件
+（如交替投影或SMO）。
+\end{enumerate}
+
+这些结论与第四章的学习率分析一起，
+为投影梯度法求解SVM对偶问题提供了尽可能完整的理论解释。
+同时，也清晰地揭示了该方法的局限性，
+为引入更优雅的算法（如SMO）提供了动机。

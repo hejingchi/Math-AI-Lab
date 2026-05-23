@@ -1,0 +1,23 @@
+\textbf{Baskakov 算子}：对 $f\in C[0,\infty)$，$\mathcal{B}_n(f;x)=\sum_{k=0}^\infty f(\frac{k}{n})\binom{n+k-1}{k}x^k(1+x)^{-n-k}$。由引理 \ref{lem:baskakov1}--\ref{lem:baskakov3}：
+\[
+\mathcal{B}_n(1;x)=1,\quad \mathcal{B}_n(t;x)=x,\quad \mathcal{B}_n(t^2;x)=x^2+\frac{x(1+x)}{n}.
+\]
+因此 $\alpha_n(x)=0$, $\beta_n(x)=0$, $\theta_n(x)=\frac{x(1+x)}{n}\to 0$ 在任何紧区间上一致。由 Korovkin 定理，$\mathcal{B}_n(f;x)$ 在任意 $[0,a]$ 上一致收敛于 $f(x)$。
+
+\textbf{Mirakyan 算子}：对 $f\in C[0,\infty)$，$M_n(f;x)=\sum_{k=0}^\infty f(\frac{k}{n})\frac{(nx)^k}{k!}e^{-nx}$。利用 Poisson 分布的矩公式：
+\[
+M_n(1;x)=1,\quad M_n(t;x)=x,\quad M_n(t^2;x)=x^2+\frac{x}{n}.
+\]
+因此 $\alpha_n(x)=0$, $\beta_n(x)=0$, $\theta_n(x)=\frac{x}{n}\to 0$ 在任何紧区间上一致。由 Korovkin 定理，$M_n(f;x)$ 在任意 $[0,a]$ 上一致收敛于 $f(x)$。
+
+\textbf{Vallée-Poussin 算子}：对 $f\in C_{2\pi}$，$V_n(f;x)=\frac{(2n)!!}{2\pi\cdot(2n-1)!!}\int_{-\pi}^\pi f(t)\cos^{2n}\frac{t-x}{2}\,dt$。验证三角情形的测试函数：
+\[
+V_n(1;x)=1,
+\]
+\[
+V_n(\cos t;x) = \frac{n}{2n-1}\cos x = \cos x - \frac{n-1}{2n-1}\cos x,
+\]
+\[
+V_n(\sin t;x) = \frac{n}{2n-1}\sin x = \sin x - \frac{n-1}{2n-1}\sin x.
+\]
+因此 $\alpha_n(x)=0$, $\beta_n(x)=-\frac{n-1}{2n-1}\cos x\to 0$, $\theta_n(x)=-\frac{n-1}{2n-1}\sin x\to 0$ 均一致。由 %Korovkin 三角定理，$V_n(f;x)$ 一致收敛于 $f(x)$。

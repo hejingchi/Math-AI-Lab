@@ -1,0 +1,36 @@
+\section{三角多项式的一致逼近}
+
+\subsection{Fourier 级数的部分和}
+
+\begin{theorem}
+设 $f\in C_{2\pi}$，$S_n(f)$ 为其 Fourier 级数的部分和，则存在常数 $c$ 使得
+\[
+\|S_n(f)\| \le c\ln n\,\|f\|,\quad n\ge1.
+\]
+\end{theorem}
+
+\begin{proof}
+利用 Dirichlet 核，
+\[
+S_n(f;x) = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x+u)\frac{\sin\big((n+\frac12)u\big)}{\sin\frac12u}\,du,
+\]
+于是
+\begin{align*}
+|S_n(f;x)|
+&\le \frac{\|f\|}{2\pi}\int_{-\pi}^{\pi}\left|\frac{\sin\big((n+\frac12)u\big)}{\sin\frac12u}\right| du\\
+&\le \frac{\|f\|}{\pi}\int_{0}^{\pi} \frac{|\sin\big((n+\frac12)u\big)|}{\sin\frac12u}\,du.
+\end{align*}
+将积分拆为 $[0,\frac{\pi}{2n+1}]$ 和 $[\frac{\pi}{2n+1},\pi]$ 两部分。
+在第一个区间上利用 $\sin\frac{u}{2}\ge \frac{u}{\pi}$，$|\sin(n+\frac12)u|\le (n+\frac12)u$，得
+\[
+\int_{0}^{\frac{\pi}{2n+1}} \le \int_{0}^{\frac{\pi}{2n+1}} \frac{(n+\frac12)u}{\frac{u}{\pi}}\,du = \frac{\pi^2}{2}.
+\]
+在第二个区间上利用 $\sin\frac{u}{2}\ge \frac{u}{\pi}$，$|\sin|\le 1$，得
+\[
+\int_{\frac{\pi}{2n+1}}^{\pi} \le \int_{\frac{\pi}{2n+1}}^{\pi} \frac{1}{\frac{u}{\pi}}\,du = \pi\ln(2n+1).
+\]
+因此
+\[
+|S_n(f;x)| \le \|f\|\Big(\frac{\pi}{2} + \ln(2n+1)\Big) \le c\ln n\,\|f\|.
+\]
+\end{proof}

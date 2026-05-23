@@ -1,0 +1,145 @@
+\section{Lebesgue不等式与三角多项式算子的Lebesgue常数}
+
+在上一章中，我们借助Korovkin定理建立了线性正算子的一致收敛性。但收敛性本身只告诉我们“当$n$足够大时误差会趋于零”，并没有给出任何关于“收敛有多快”的信息。要讨论逼近速率，就必须引入一个连接“构造性算子”与“最佳逼近”之间的桥梁——Lebesgue不等式。
+
+\subsection{Lebesgue不等式的意义与证明}
+
+设$\mathcal{T}_n$为次数不超过$n$的三角多项式全体。对于$f\in C_{2\pi}$，记其最佳逼近误差为
+\[
+E_n(f)=\inf_{T\in\mathcal{T}_n}\|f-T\|_\infty.
+\]
+任给一个线性算子$L_n:C_{2\pi}\to\mathcal{T}_n$，我们希望用$E_n(f)$来控制实际逼近误差$\|f-L_nf\|_\infty$。如果$L_n$恰好是到$\mathcal{T}_n$上的投影（即对任何$T\in\mathcal{T}_n$有$L_nT=T$），那么下面的简单不等式就给出了答案。
+
+\begin{theorem}[Lebesgue不等式]
+设$L_n:C_{2\pi}\to\mathcal{T}_n$是一个线性算子，满足对任意$T\in\mathcal{T}_n$有$L_nT=T$。令
+\[
+\Lambda_n=\|L_n\|=\sup_{\|f\|_\infty=1}\|L_nf\|_\infty
+\]
+为算子的范数，称为\textbf{Lebesgue常数}。则对任何$f\in C_{2\pi}$，有
+\[
+\|f-L_nf\|_\infty\le (1+\Lambda_n)E_n(f).
+\]
+\end{theorem}
+
+\begin{proof}
+由最佳逼近的定义，存在$T^*\in\mathcal{T}_n$使得$\|f-T^*\|_\infty=E_n(f)$。利用$L_nT^*=T^*$以及$L_n$的线性性，
+\[
+f-L_nf=(f-T^*)-L_n(f-T^*).
+\]
+取范数，由三角不等式和算子范数的定义即得
+\[
+\|f-L_nf\|_\infty\le\|f-T^*\|_\infty+\|L_n(f-T^*)\|_\infty
+\le E_n(f)+\Lambda_n\|f-T^*\|_\infty=(1+\Lambda_n)E_n(f).
+\]
+\end{proof}
+
+这个不等式的重要性在于：它把用线性算子得到的实际逼近误差，分离成了两个因子的乘积——$(1+\Lambda_n)$是算子本身带来的“放大”，而$E_n(f)$则是该函数类的内在最佳逼近能力。$\Lambda_n$越小（越接近$1$），算子就越“不损失”最佳逼近的精度；反之若$\Lambda_n$随$n$增长而急剧增大，即使$E_n(f)$很小，实际误差也可能被大幅放大。
+
+接下来我们考察三角逼近中两个最重要的算子——傅里叶部分和算子与Fejér算子，精确计算它们的Lebesgue常数。一个发散，一个恒为$1$，对比极富启发性。
+
+\subsection{傅里叶部分和算子的Lebesgue常数}
+
+对$f\in C_{2\pi}$，其傅里叶级数的$n$阶部分和为
+\[
+S_n(f,x)=\frac{a_0}{2}+\sum_{k=1}^{n}\bigl(a_k\cos kx+b_k\sin kx\bigr),
+\]
+其中$a_k,b_k$为傅里叶系数。算子$S_n$显然是线性的，并且次数不超过$n$的三角多项式在$S_n$作用下不变（因为它的傅里叶级数就是它自身）。因此$S_n$满足Lebesgue不等式的条件。
+
+利用Dirichlet核
+\[
+D_n(t)=\frac12+\sum_{k=1}^{n}\cos kt=\frac{\sin\bigl((n+\frac12)t\bigr)}{2\sin\frac{t}{2}},
+\]
+部分和可写成卷积形式
+\[
+S_n(f,x)=\frac1\pi\int_{-\pi}^{\pi}f(x-t)D_n(t)\,dt.
+\]
+于是算子范数等于Dirichlet核的$L_1$范数：
+\[
+\Lambda_n=\|S_n\|=\frac1\pi\int_{-\pi}^{\pi}|D_n(t)|\,dt.
+\]
+
+\begin{theorem}[傅里叶部分和的Lebesgue常数的渐近阶]
+存在常数$C>0$，使得
+\[
+\Lambda_n=\frac{4}{\pi^2}\ln n+O(1),\qquad n\to\infty.
+\]
+\end{theorem}
+
+\begin{proof}
+由$D_n$的偶性，只需考虑$[0,\pi]$上的积分：
+\[
+\Lambda_n=\frac2\pi\int_0^\pi|D_n(t)|\,dt
+=\frac1\pi\int_0^\pi\frac{|\sin((n+\frac12)t)|}{\sin\frac{t}{2}}\,dt.
+\]
+令$m=n+\frac12$。在$[0,\pi]$上，利用$\sin\frac{t}{2}\ge\frac{t}{\pi}$（由正弦的凹性）可得上界
+\[
+\Lambda_n\le\frac1\pi\int_0^\pi\frac{|\sin mt|}{t/\pi}\,dt
+=\int_0^\pi\frac{|\sin mt|}{t}\,dt.
+\]
+另一方面，由$\sin\frac{t}{2}\le\frac{t}{2}$得下界
+\[
+\Lambda_n\ge\frac1\pi\int_0^\pi\frac{|\sin mt|}{t/2}\,dt
+=\frac2\pi\int_0^\pi\frac{|\sin mt|}{t}\,dt.
+\]
+因此只要处理积分
+\[
+I_m:=\int_0^\pi\frac{|\sin mt|}{t}\,dt
+=\int_0^{m\pi}\frac{|\sin u|}{u}\,du\qquad(u=mt).
+\]
+将$[0,m\pi]$按$\sin u$的零点分为$m$个长度为$\pi$的小区间：
+\[
+I_m=\sum_{k=0}^{m-1}\int_{k\pi}^{(k+1)\pi}\frac{|\sin u|}{u}\,du.
+\]
+对于$k\ge1$，当$u\in[k\pi,(k+1)\pi]$时，$\frac1{(k+1)\pi}\le\frac1u\le\frac1{k\pi}$，而$\int_{k\pi}^{(k+1)\pi}|\sin u|\,du=2$。因此
+\[
+\frac{2}{(k+1)\pi}\le\int_{k\pi}^{(k+1)\pi}\frac{|\sin u|}{u}\,du\le\frac{2}{k\pi}.
+\]
+$k=0$的项$\int_0^\pi\frac{\sin u}{u}\,du$为常数，记作$A$。于是
+\[
+I_m=A+\frac{2}{\pi}\sum_{k=1}^{m-1}\theta_k,\qquad \frac{1}{k+1}\le\theta_k\le\frac1k.
+\]
+而$\sum_{k=1}^{m-1}\frac1k=\ln m+O(1)$，且$\sum_{k=1}^{m-1}(\frac1k-\frac1{k+1})=1-\frac1m$为有界量，故
+\[
+\sum_{k=1}^{m-1}\theta_k=\ln m+O(1).
+\]
+因此$I_m=\frac{2}{\pi}\ln m+O(1)$。代入$\Lambda_n$的上、下界表达式，注意$m\sim n$，便得到
+\[
+\Lambda_n=\frac{4}{\pi^2}\ln n+O(1).
+\]
+\end{proof}
+
+对数发散虽然缓慢，但毕竟趋于无穷。由Banach–Steinhaus定理，这意味着存在连续函数其傅里叶级数不一致收敛（甚至在某些点发散）。这正是$\Lambda_n$无界所带来的本质障碍。
+
+\subsection{Fejér算子的Lebesgue常数}
+
+Fejér算子定义为部分和的算术平均：
+\[
+\sigma_n(f,x)=\frac{S_0(f,x)+S_1(f,x)+\cdots+S_n(f,x)}{n+1}.
+\]
+它也可以写成卷积形式
+\[
+\sigma_n(f,x)=\frac1\pi\int_{-\pi}^{\pi}f(x-t)\mathcal{F}_n(t)\,dt,
+\]
+其中Fejér核为
+\[
+\mathcal{F}_n(t)=\frac1{n+1}\sum_{k=0}^{n}D_k(t)
+=\frac{1}{2(n+1)}\frac{\sin^2\!\bigl(\frac{n+1}{2}t\bigr)}{\sin^2\frac{t}{2}}.
+\]
+注意$\mathcal{F}_n(t)\ge0$且$\frac1\pi\int_{-\pi}^{\pi}\mathcal{F}_n(t)dt=1$。
+
+与$S_n$不同，$\sigma_n$并不是到$\mathcal{T}_n$的投影（一个$T\in\mathcal{T}_n$的Fejér平均并不一定等于$T$自身），因此不能直接套用定理形式中的Lebesgue不等式。但我们仍然可以计算$\sigma_n$作为线性算子的范数，这个范数同样扮演着刻画稳定性的角色。
+
+\begin{theorem}[Fejér算子的范数]
+对任意$n$，有$\|\sigma_n\|=1$。
+\end{theorem}
+
+\begin{proof}
+对任意$f$，由于$\mathcal{F}_n\ge0$，
+\[
+|\sigma_n(f,x)|\le\frac1\pi\int_{-\pi}^{\pi}|f(x-t)|\mathcal{F}_n(t)\,dt
+\le\|f\|_\infty\cdot\frac1\pi\int_{-\pi}^{\pi}\mathcal{F}_n(t)\,dt=\|f\|_\infty.
+\]
+故$\|\sigma_n\|\le1$。另一方面，取$f\equiv1$，则$\sigma_n(1,x)\equiv1$，达到等号，因此$\|\sigma_n\|=1$。
+\end{proof}
+
+这一结果与傅里叶部分和形成鲜明对照：Fejér算子的范数不仅不随$n$增大，而且恒为最小值$1$。在下一章中，我们将利用连续模和Jackson定理，给出这两种算子逼近阶的精确估计，并揭示范数差异带来的本质影响。

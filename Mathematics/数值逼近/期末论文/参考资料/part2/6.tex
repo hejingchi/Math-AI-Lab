@@ -1,0 +1,48 @@
+\section{Korovkin 定理}
+
+前面介绍的 Bernstein、Baskakov、Mirakyan 算子以及 V-P 算子都具有线性性和非负性。Korovkin 给出了线性正算子一致逼近连续函数的简洁判别法则。
+
+\begin{theorem}[Korovkin 定理，代数多项式情形]
+设线性正算子 $L_n: C[a,b]\to C[a,b]$ 满足
+\[
+L_n(1;x)=1+\alpha_n(x),\quad L_n(t;x)=x+\beta_n(x),\quad L_n(t^2;x)=x^2+\theta_n(x),
+\]
+其中 $\alpha_n,\beta_n,\theta_n$ 在 $[a,b]$ 上一致收敛于 $0$。则对任意 $f\in C[a,b]$，$L_n(f;x)$ 一致收敛于 $f(x)$。
+\end{theorem}
+
+\begin{proof}
+由 $f$ 在 $[a,b]$ 上一致连续且 $\|f\|\le M$，$\forall \epsilon>0,\exists\delta>0$，当 $|x-y|<\delta$ 时 $|f(x)-f(y)|<\epsilon$。对任意 $x,t\in[a,b]$ 有
+\[
+-\frac{2M}{\delta^2}(t-x)^2 - \epsilon \le f(t)-f(x) \le \frac{2M}{\delta^2}(t-x)^2 + \epsilon.
+\]
+作用线性正算子 $L_n$（关于变量 $t$，$x$ 视为参数），利用线性性与非负性保持不等式方向，得
+\[
+-\frac{2M}{\delta^2}L_n((t-x)^2;x)-\epsilon L_n(1;x)
+\le L_n(f;x)-f(x)L_n(1;x)
+\le \frac{2M}{\delta^2}L_n((t-x)^2;x)+\epsilon L_n(1;x).
+\]
+计算
+\begin{align*}
+L_n((t-x)^2;x)
+&= L_n(t^2;x) - 2xL_n(t;x) + x^2L_n(1;x)\\
+&= (x^2+\theta_n(x)) - 2x(x+\beta_n(x)) + x^2(1+\alpha_n(x))\\
+&= \theta_n(x) - 2x\beta_n(x) + x^2\alpha_n(x),
+\end{align*}
+它一致收敛于 $0$。又 $L_n(1;x)=1+\alpha_n(x)\to 1$。所以
+\[
+L_n(f;x) - f(x) = \big(L_n(f;x)-f(x)L_n(1;x)\big) + f(x)\alpha_n(x) \to 0
+\]
+一致成立。
+\end{proof}
+
+对于周期函数，有类似的定理。
+\begin{theorem}[Korovkin 定理，三角多项式情形]
+设线性正算子 $L_n: C_{2\pi}\to C_{2\pi}$ 满足
+\[
+L_n(1;x)=1+\alpha_n(x),\quad L_n(\cos t;x)=\cos x+\beta_n(x),\quad L_n(\sin t;x)=\sin x+\theta_n(x),
+\]
+且 $\alpha_n,\beta_n,\theta_n$ 一致收敛于 $0$，则对任意 $f\in C_{2\pi}$，$L_n(f;x)$ 一致收敛于 $f(x)$。
+\end{theorem}
+证明与代数情形类似，仅在远区间估计时用 $\frac{2M}{\sin^2(\delta/2)}\sin^2\frac{t-x}{2}$ 替代 $(t-x)^2$。
+
+前面所有具体算子（Bernstein, Baskakov, Mirakyan, V-P）均满足相应 Korovkin 定理的条件，因此它们的一致收敛性都可以由 Korovkin 定理直接推出。这也揭示了这些构造背后的共同本质：只需验证三个简单的“矩”条件，便能保证对一切连续函数的一致逼近。

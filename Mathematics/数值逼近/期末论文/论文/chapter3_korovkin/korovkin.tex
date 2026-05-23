@@ -1,0 +1,116 @@
+\section{经典线性正算子与 Korovkin 定理}
+
+Weierstrass 第一逼近定理和第二逼近定理分别肯定了闭区间上的连续函数可用多项式一致逼近，周期连续函数可用三角多项式一致逼近。然而，这两个定理本身并未提供统一的构造方法。本章将从具体的构造性算子入手，给出 Bernstein、Baskakov、Mirakyan 以及 Vallée-Poussin 算子的直接证明，随后引入 Korovkin 定理，将这些算子的收敛性纳入一个简洁的统一框架之中。
+
+\input{chapter3_korovkin/theorem/weierstrass.tex}
+
+\input{chapter3_korovkin/theorem/fejer.tex}
+%\input{chapter3_korovkin/theorem/baskakov_mirakyan.tex}
+
+%\input{chapter3_korovkin/theorem/vallee_poussin.tex}
+
+\subsection{Korovkin 定理——线性正算子收敛的统一判据}
+
+前面几节我们逐一给出了 Bernstein、Baskakov、Mirakyan 以及 V-P 算子的构造与收敛性证明。回顾这些证明，不难发现它们共享着几乎完全相同的论证结构：利用核函数的非负性与归一性，将逼近误差按远近拆分为两部分，近处用一致连续性控制，远处用函数的界与核函数的方差型求和控制，最终令 $n\to\infty$ 得到一致收敛。
+
+这种高度雷同的证明模式暗示着背后存在一个统一的原理。Korovkin 在 20 世纪 50 年代发现了这一原理：对于线性正算子，其一致收敛性完全由三个“测试函数”的逼近行为所决定。在代数情形下，测试函数为 $1$, $x$, $x^2$；在三角情形下，测试函数为 $1$, $\cos x$, $\sin x$。本节将阐述并证明这两个 Korovkin 定理，并展示如何用它们简洁地统一处理前述所有算子。
+
+\subsubsection{Korovkin 定理（代数多项式情形）}
+
+\begin{theorem}[Korovkin 定理，代数多项式情形]
+设线性正算子 $L_n: C[a,b]\to C[a,b]$ 满足
+\[
+L_n(1;x)=1+\alpha_n(x),\quad L_n(t;x)=x+\beta_n(x),\quad L_n(t^2;x)=x^2+\theta_n(x),
+\]
+其中 $\alpha_n,\beta_n,\theta_n$ 在 $[a,b]$ 上一致收敛于 $0$。则对任意 $f\in C[a,b]$，$L_n(f;x)$ 一致收敛于 $f(x)$。
+\end{theorem}
+
+\begin{proof}
+由 $f$ 在 $[a,b]$ 上一致连续且 $\|f\|\le M$，$\forall \epsilon>0,\exists\delta>0$，当 $|x-y|<\delta$ 时 $|f(x)-f(y)|<\epsilon$。对任意 $x,t\in[a,b]$ 有
+\[
+-\frac{2M}{\delta^2}(t-x)^2 - \epsilon \le f(t)-f(x) \le \frac{2M}{\delta^2}(t-x)^2 + \epsilon.
+\]
+作用线性正算子 $L_n$（关于变量 $t$，$x$ 视为参数），利用线性性与非负性保持不等式方向，得
+\[
+-\frac{2M}{\delta^2}L_n((t-x)^2;x)-\epsilon L_n(1;x)
+\le L_n(f;x)-f(x)L_n(1;x)
+\le \frac{2M}{\delta^2}L_n((t-x)^2;x)+\epsilon L_n(1;x).
+\]
+计算
+\begin{align*}
+L_n((t-x)^2;x)
+&= L_n(t^2;x) - 2xL_n(t;x) + x^2L_n(1;x)\\
+&= (x^2+\theta_n(x)) - 2x(x+\beta_n(x)) + x^2(1+\alpha_n(x))\\
+&= \theta_n(x) - 2x\beta_n(x) + x^2\alpha_n(x),
+\end{align*}
+它一致收敛于 $0$。又 $L_n(1;x)=1+\alpha_n(x)\to 1$。所以
+\[
+L_n(f;x) - f(x) = \big(L_n(f;x)-f(x)L_n(1;x)\big) + f(x)\alpha_n(x) \to 0
+\]
+一致成立。
+\end{proof}
+
+\subsubsection{Korovkin 定理（三角多项式情形）}
+
+对于周期函数，有完全平行的结论。
+
+\begin{theorem}[Korovkin 定理，三角多项式情形]
+设线性正算子 $L_n: C_{2\pi}\to C_{2\pi}$ 满足
+\[
+L_n(1;x)=1+\alpha_n(x),\quad L_n(\cos t;x)=\cos x+\beta_n(x),\quad L_n(\sin t;x)=\sin x+\theta_n(x),
+\]
+且 $\alpha_n,\beta_n,\theta_n$ 一致收敛于 $0$，则对任意 $f\in C_{2\pi}$，$L_n(f;x)$ 一致收敛于 $f(x)$。
+\end{theorem}
+
+\begin{proof}
+证明思路与代数情形类似。由 $f$ 在 $\R$ 上一致连续且以 $2\pi$ 为周期，$\forall\epsilon>0,\exists\delta>0$，当 $|x-y|<\delta$ 时 $|f(x)-f(y)|<\epsilon$。对任意 $x,t\in\R$，可用三角不等式得到
+\[
+-\frac{2M}{\sin^2(\delta/2)}\sin^2\frac{t-x}{2} - \epsilon \le f(t)-f(x) \le \frac{2M}{\sin^2(\delta/2)}\sin^2\frac{t-x}{2} + \epsilon.
+\]
+利用恒等式
+\[
+\sin^2\frac{t-x}{2} = \frac{1}{2}\big(1 - \cos t\cos x - \sin t\sin x\big),
+\]
+对 $L_n$ 作用后，$L_n(\sin^2\frac{t-x}{2};x)$ 可展开为 $L_n(1;x)$, $L_n(\cos t;x)$, $L_n(\sin t;x)$ 的线性组合。由定理条件，这三项分别一致收敛于 $1$, $\cos x$, $\sin x$，因此 $L_n(\sin^2\frac{t-x}{2};x)$ 一致收敛于 $0$。其余步骤与代数情形完全相同。
+\end{proof}
+
+\subsubsection{统一验证：回到经典算子}
+
+Korovkin 定理的美妙之处在于，它将原本需要逐一进行的分段估计，统一简化为对三个测试函数的验证。下面以 Bernstein 多项式和 Fejér 算子为例，展示这种统一性在代数情形与三角情形中的平行应用。
+
+\textbf{Bernstein 多项式}：对 $f\in C[0,1]$，$B_n(f;x)=\sum_{k=0}^{n} f(\frac{k}{n})\binom{n}{k}x^{k}(1-x)^{n-k}$ 是线性正算子。直接计算三个测试函数：
+\[
+B_n(1;x)=1,\qquad B_n(t;x)=x,\qquad B_n(t^{2};x)=x^{2}+\frac{x(1-x)}{n}.
+\]
+因此 $\alpha_n(x)=0$，$\beta_n(x)=0$，$\theta_n(x)=\frac{x(1-x)}{n}\rightrightarrows 0$。由 Korovkin 定理即得 $B_n(f;x)$ 一致收敛于 $f(x)$。
+
+\textbf{Fejér 算子}：对周期函数 $f\in C_{2\pi}$，Fejér 算子
+\[
+\sigma_n(f,x)=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x-t)\mathcal{F}_n(t)\,dt,\qquad
+\mathcal{F}_n(t)=\frac{1}{2(n+1)}\frac{\sin^{2}\bigl(\frac{n+1}{2}t\bigr)}{\sin^{2}\frac{t}{2}}
+\]
+是线性正算子（积分核非负）。利用三角形式的 Korovkin 定理，只需验证测试函数 $1,\cos t,\sin t$。
+
+由归一化条件即得 $\sigma_n(1,x)=1$。对于 $\cos t$，利用 $\cos(x-t)=\cos x\cos t+\sin x\sin t$ 以及 $\mathcal{F}_n$ 为偶函数，有
+\[
+\sigma_n(\cos t,x)=\frac{1}{\pi}\int_{-\pi}^{\pi}\cos(x-t)\mathcal{F}_n(t)\,dt
+=\cos x\cdot\frac{1}{\pi}\int_{-\pi}^{\pi}\cos t\,\mathcal{F}_n(t)\,dt.
+\]
+由 Dirichlet 核的性质，$\frac{1}{\pi}\int_{-\pi}^{\pi}\cos t\,D_k(t)\,dt=1$（$k\ge 1$）而 $k=0$ 时为 $0$，因此
+\[
+\frac{1}{\pi}\int_{-\pi}^{\pi}\cos t\,\mathcal{F}_n(t)\,dt
+=\frac{1}{n+1}\sum_{k=0}^{n}\frac{1}{\pi}\int_{-\pi}^{\pi}\cos t\,D_k(t)\,dt
+=\frac{n}{n+1}=1-\frac{1}{n+1}.
+\]
+于是 $\sigma_n(\cos t,x)=\frac{n}{n+1}\cos x=\cos x-\frac{1}{n+1}\cos x$，余项一致趋于 $0$。同理，由奇偶性可得
+\[
+\sigma_n(\sin t,x)=\sin x\cdot\frac{1}{\pi}\int_{-\pi}^{\pi}\cos t\,\mathcal{F}_n(t)\,dt
+=\frac{n}{n+1}\sin x=\sin x-\frac{1}{n+1}\sin x,
+\]
+余项亦一致趋于 $0$。由三角形式 Korovkin 定理立即得到 $\sigma_n(f,x)\rightrightarrows f(x)$，这样 Weierstrass 第二逼近定理作为 Korovkin 定理的直接推论而成立，与 Bernstein 多项式的情形形成完美对照。
+
+\subsection{小结}
+
+本章从具体的构造性算子出发，给出了 Weierstrass 两个逼近定理的完整证明，随后引入 Korovkin 定理，揭示了这些算子收敛性的共同本质：只需验证三个测试函数的矩条件，即可保证对一切连续函数的一致收敛。Bernstein 多项式的二项分布核、Baskakov 算子的负二项分布核、Mirakyan 算子的 Poisson 分布核、Vallée-Poussin 算子的幂次余弦核，虽然形式各异，但在 Korovkin 的框架下，它们的收敛性验证都归结为完全相同的简单计算。
+
+然而，Korovkin 定理只回答了“是否收敛”的问题，并未涉及逼近的速率。要刻画“收敛有多快”，需要将线性算子的误差与最佳逼近误差联系起来，这正是下一章 Lebesgue 不等式的任务。

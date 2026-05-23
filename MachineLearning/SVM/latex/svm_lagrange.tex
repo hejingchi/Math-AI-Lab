@@ -1,0 +1,280 @@
+% !TEX root = ../main.tex
+\section{从拉格朗日方法到对偶问题}
+
+\subsection{硬间隔SVM的拉格朗日函数}
+
+回顾硬间隔SVM的原始问题
+\begin{equation}
+\begin{aligned}
+\min_{w,b}\quad & \frac{1}{2}\|w\|^2 \\
+\text{s.t.}\quad & 1-y_i(w\cdot x_i + b) \leqslant 0
+\end{aligned}
+\end{equation}
+
+令 $c_i(w,b) = 1-y_i(w\cdot x_i + b)$，构造拉格朗日函数
+\begin{equation}
+\begin{aligned}
+L(w,b,\alpha) &= \frac{1}{2}\|w\|^2 + \sum_{i=1}^{N}\alpha_i c_i(w,b) \\
+&= \frac{1}{2}\|w\|^2 + \sum_{i=1}^{N}\alpha_i
+   - \sum_{i=1}^{N}\alpha_i y_i(w\cdot x_i + b)
+\end{aligned}
+\end{equation}
+其中 $\alpha_i \geqslant 0$ 为拉格朗日乘子。
+
+\subsection{一般约束优化问题的框架}
+
+考虑一般形式的约束优化问题
+\begin{equation}
+\begin{aligned}
+\min_x\quad & f(x) \\
+\text{s.t.}\quad & h_i(x) = 0 \\
+& c_j(x) \leqslant 0
+\end{aligned}
+\end{equation}
+
+引入拉格朗日函数
+\begin{equation}
+L(x,\alpha,\beta) = f(x) + \sum_{j}\alpha_j c_j(x) + \sum_{i}\beta_i h_i(x)
+\end{equation}
+其中 $\alpha_j \geqslant 0$。
+
+直接求解该问题时，极值点的必要条件（KKT条件）包括：
+\begin{itemize}
+\item 驻点条件：$\nabla_x L = 0$，$\nabla_\beta L = 0$（后者即等式约束）
+\item 对偶可行性：$\alpha_j \geqslant 0$
+\item 互补松弛条件：$\alpha_j c_j(x) = 0$
+\end{itemize}
+
+但由于事先不知道哪些不等式约束真正起作用，直接讨论 $\alpha$ 的取值非常复杂。
+为此引入拉格朗日对偶性。
+
+\subsection{广义拉格朗日的极小极大问题}
+
+定义
+\begin{equation}
+\theta_P(x) = \max_{\alpha,\beta,\;\alpha_i\geqslant 0} L(x,\alpha,\beta)
+\end{equation}
+
+若 $x$ 满足所有约束条件（$c_j(x)\leqslant 0$，$h_i(x)=0$），
+则由于 $\alpha_j\geqslant 0$，有
+\begin{equation}
+L(x,\alpha,\beta) = f(x) + \sum_j \alpha_j c_j(x) \leqslant f(x)
+\end{equation}
+当取 $\alpha_j=0$ 时取等号，故
+\begin{equation}
+\theta_P(x) = \max_{\alpha,\beta,\;\alpha_i\geqslant 0} L(x,\alpha,\beta) = f(x)
+\end{equation}
+
+若 $x$ 不满足约束条件，则存在 $c_j(x) > 0$ 或 $h_i(x) \neq 0$，
+可通过选取合适的 $\alpha_j$ 或 $\beta_i$ 使 $L \to +\infty$。
+
+因此
+\begin{equation}
+\theta_P(x) = \begin{cases}
+f(x) & x\ \text{满足约束} \\
++\infty & x\ \text{不满足约束}
+\end{cases}
+\end{equation}
+
+于是原问题等价于
+\begin{equation}
+\min_x \theta_P(x) = \min_x \max_{\alpha,\beta,\;\alpha_i\geqslant 0} L(x,\alpha,\beta)
+\end{equation}
+这称为广义拉格朗日的\textbf{极小极大问题}，记其最优值为 $p^*$。
+
+\subsection{广义拉格朗日的极大极小问题——对偶问题}
+
+交换 $\min$ 和 $\max$ 的顺序，定义
+\begin{equation}
+\theta_D(\alpha,\beta) = \min_x L(x,\alpha,\beta)
+\end{equation}
+
+考虑
+\begin{equation}
+\max_{\alpha,\beta,\;\alpha_i\geqslant 0} \theta_D(\alpha,\beta)
+= \max_{\alpha,\beta,\;\alpha_i\geqslant 0} \min_x L(x,\alpha,\beta)
+\end{equation}
+这称为广义拉格朗日的\textbf{极大极小问题}，即原问题的\textbf{对偶问题}。
+记其最优值为 $d^*$。
+
+\subsection{弱对偶定理}
+
+\begin{theorem}[弱对偶定理]
+对任意可行解 $x^*$（满足 $c_j(x^*)\leqslant 0$，$h_i(x^*)=0$）和任意 $\alpha \geqslant 0,\beta$，有
+\begin{equation}
+\theta_D(\alpha,\beta) \leqslant f(x^*)
+\end{equation}
+进而
+\begin{equation}
+d^* = \max_{\alpha,\beta,\;\alpha_i\geqslant 0} \theta_D(\alpha,\beta)
+    \leqslant \min_x \theta_P(x) = p^*
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+由定义，
+\begin{equation}
+\theta_D(\alpha,\beta) = \min_x L(x,\alpha,\beta)
+\leqslant L(x^*,\alpha,\beta)
+\end{equation}
+而
+\begin{equation}
+\begin{aligned}
+L(x^*,\alpha,\beta) &= f(x^*) + \sum_j \alpha_j c_j(x^*) + \sum_i \beta_i h_i(x^*) \\
+&= f(x^*) + \sum_j \alpha_j c_j(x^*) \\
+&\leqslant f(x^*)
+\end{aligned}
+\end{equation}
+其中第二个等号用到了 $h_i(x^*)=0$，最后一个不等号是因为 $\alpha_j\geqslant 0$ 且 $c_j(x^*)\leqslant 0$。
+取极大和极小即得结论。
+\end{proof}
+
+弱对偶定理在任何情况下都成立。$d^* \leqslant p^*$ 称为\textbf{弱对偶性}。
+
+\subsection{强对偶条件}
+
+若 $d^* = p^*$，则称问题满足\textbf{强对偶性}。
+SVM的凸二次规划问题在Slater条件下满足强对偶性。
+
+\subsection{KKT条件}
+
+对于带不等式约束的优化问题，最优解满足如下必要条件，称为\textbf{KKT条件}：
+\begin{equation}
+\boxed{
+\begin{cases}
+\nabla_x L(x,\alpha,\beta) = 0 & \text{（驻点条件）} \\
+h_i(x) = 0 & \text{（等式约束）} \\
+c_j(x) \leqslant 0 & \text{（原始可行性）} \\
+\alpha_j \geqslant 0 & \text{（对偶可行性）} \\
+\alpha_j c_j(x) = 0 & \text{（互补松弛条件）}
+\end{cases}}
+\end{equation}
+
+在凸优化问题中，若强对偶成立，则KKT条件从必要条件升级为\textbf{充分必要条件}：
+\begin{equation}
+x^*\ \text{是最优解} \iff x^*\ \text{满足KKT条件}
+\end{equation}
+
+\subsection{强对偶如何导出KKT条件}
+
+设强对偶成立，即 $d^* = p^*$。令 $(x^*,\alpha^*,\beta^*)$ 分别为原问题与对偶问题的最优解。
+考虑不等式链：
+\begin{equation}
+\begin{aligned}
+d^* = \theta_D(\alpha^*,\beta^*)
+    &= \min_x L(x,\alpha^*,\beta^*) \\
+    &\leqslant L(x^*,\alpha^*,\beta^*) \\
+    &\leqslant \theta_P(x^*) = p^*
+\end{aligned}
+\end{equation}
+
+由于两端相等，中间所有不等号必须取等。
+
+\textbf{第一个等号}：$\min_x L(x,\alpha^*,\beta^*) = L(x^*,\alpha^*,\beta^*)$，
+说明 $x^*$ 是 $L(\cdot,\alpha^*,\beta^*)$ 的极小值点，故驻点条件成立：
+\begin{equation}
+\nabla_x L(x^*,\alpha^*,\beta^*) = 0
+\end{equation}
+
+\textbf{第二个等号}：$L(x^*,\alpha^*,\beta^*) = f(x^*)$，展开即
+\begin{equation}
+\sum_j \alpha_j^* c_j(x^*) = 0
+\end{equation}
+由于每一项 $\alpha_j^* \geqslant 0$，$c_j(x^*) \leqslant 0$，每一项非正，求和为零意味着每一项必须为零：
+\begin{equation}
+\alpha_j^* c_j(x^*) = 0 \quad (\forall j)
+\end{equation}
+这就是互补松弛条件。加上原有的可行性条件，即构成完整的KKT条件。
+
+\subsection{对偶问题中驻点条件的双重含义}
+
+在求解对偶问题的过程中，$\nabla_x L = 0$ 出现了两次，含义不同。
+
+\textbf{第一层：计算对偶函数的工具。}
+定义 $\theta_D(\alpha) = \min_{w,b} L(w,b,\alpha)$，令 $\nabla_w L = 0$，
+$\frac{\partial L}{\partial b}=0$，只是求极小值的必要操作。
+此时还没有用到KKT条件，也没有用到强对偶。
+解出 $w,b$ 与 $\alpha$ 的关系，代回 $L$，得到只含 $\alpha$ 的 $\theta_D(\alpha)$。
+
+\textbf{第二层：还原原始最优解时的KKT驻点条件。}
+解对偶问题得到最优 $\alpha^*$ 后，需要从 $\alpha^*$ 还原出 $w^*,b^*$。
+由于SVM满足强对偶，最优解满足KKT条件，驻点条件给出
+\begin{equation}
+\nabla_w L(w^*,b^*,\alpha^*) = 0
+\end{equation}
+这个式子与第一步求极小时的形式完全相同，因此第一步解出的关系式
+$w = \sum_{i=1}^N \alpha_i y_i x_i$ 代入 $\alpha^*$ 后，直接给出原始最优解 $w^*$。
+
+两层含义形式相同，含义不同。能用同一个式子做两件事，正是强对偶成立的结果。
+
+\subsection{硬间隔SVM对偶问题的显式推导}
+
+现在将上述框架应用于硬间隔SVM。
+
+拉格朗日函数为
+\begin{equation}
+L(w,b,\alpha) = \frac{1}{2}\|w\|^2
++ \sum_{i=1}^{N}\alpha_i
+- \sum_{i=1}^{N}\alpha_i y_i(w\cdot x_i + b)
+\end{equation}
+
+令 $L$ 对 $w$ 和 $b$ 的偏导为零：
+\begin{equation}
+\frac{\partial L}{\partial w} = w - \sum_{i=1}^{N}\alpha_i y_i x_i = 0
+\quad\Longrightarrow\quad
+w = \sum_{i=1}^{N}\alpha_i y_i x_i
+\end{equation}
+
+\begin{equation}
+\frac{\partial L}{\partial b} = -\sum_{i=1}^{N}\alpha_i y_i = 0
+\quad\Longrightarrow\quad
+\sum_{i=1}^{N}\alpha_i y_i = 0
+\end{equation}
+
+将这两个结果代回 $L$。第一项 $\frac{1}{2}\|w\|^2$ 变为
+\begin{equation}
+\frac{1}{2}\left(\sum_{i=1}^{N}\alpha_i y_i x_i\right)\cdot
+\left(\sum_{j=1}^{N}\alpha_j y_j x_j\right)
+= \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_j y_i y_j(x_i\cdot x_j)
+\end{equation}
+
+第三项展开为
+\begin{equation}
+\begin{aligned}
+\sum_{i=1}^{N}\alpha_i y_i(w\cdot x_i + b)
+&= \sum_{i=1}^{N}\alpha_i y_i\left(\sum_{j=1}^{N}\alpha_j y_j x_j\cdot x_i + b\right) \\
+&= \sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_j y_i y_j(x_i\cdot x_j)
+   + b\underbrace{\sum_{i=1}^{N}\alpha_i y_i}_{=0} \\
+&= \sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_j y_i y_j(x_i\cdot x_j)
+\end{aligned}
+\end{equation}
+
+代回 $L$ 得对偶函数
+\begin{equation}
+\theta_D(\alpha) = \sum_{i=1}^{N}\alpha_i
+- \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_j y_i y_j(x_i\cdot x_j)
+\end{equation}
+
+于是对偶问题（极大化形式）为
+\begin{equation}
+\begin{aligned}
+\max_{\alpha}\quad & \sum_{i=1}^{N}\alpha_i
+- \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_j y_i y_j(x_i\cdot x_j) \\
+\text{s.t.}\quad & \sum_{i=1}^{N}\alpha_i y_i = 0 \\
+& \alpha_i \geqslant 0
+\end{aligned}
+\end{equation}
+
+转化为标准最小化问题，即得SVM的\textbf{对偶形式}
+\begin{equation}
+\boxed{
+\begin{aligned}
+\min_{\alpha}\quad & \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}
+\alpha_i\alpha_j y_i y_j(x_i\cdot x_j) - \sum_{i=1}^{N}\alpha_i \\
+\text{s.t.}\quad & \sum_{i=1}^{N}\alpha_i y_i = 0 \\
+& \alpha_i \geqslant 0
+\end{aligned}}
+\end{equation}
+
+这就是硬间隔SVM对偶问题的最终形式。后续的任务是设计算法求解此问题，
+并从最优的 $\alpha^*$ 恢复原始问题的参数 $w^*$ 和 $b^*$。

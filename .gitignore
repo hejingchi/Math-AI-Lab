@@ -224,3 +224,10 @@ __marimo__/
 *.png
 *.ggb
 trash/
+*.aux
+*.out
+*.toc
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz

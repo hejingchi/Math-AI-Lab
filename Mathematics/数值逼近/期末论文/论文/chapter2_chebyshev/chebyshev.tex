@@ -1,0 +1,111 @@
+\section{最佳逼近}
+
+逼近论研究两个基本问题。一是“存在性问题”：给定函数类，能否用某类简单函数一致逼近？Weierstrass 定理对此给出了肯定的回答。二是“最优性问题”：在次数受限的逼近工具中，理论上的最小误差是多少？达到该最小误差的逼近元具有什么特征？本章讨论第二个问题，建立最佳逼近的存在性、唯一性与切比雪夫特征刻画。这些结果将为后续 Jackson 定理提供基础，也为衡量构造性算子的逼近品质提供“最优”的参照基准。
+
+\subsection{准备工作与基础}
+先约定一些记号。
+\begin{definition}
+\begin{enumerate}
+    \item $C[a,b]$ 表示闭区间 $[a,b]$ 上的连续函数全体；
+    \item $C_{2\pi}$ 表示 $\R$ 上周期为 $2\pi$ 的连续函数全体；
+    \item $P_n$ 为次数不超过 $n$ 的实多项式全体
+    $\{a_nx^n+\cdots+a_1x+a_0: a_i\in\R\}$；
+    \item $T_n$ 为次数不超过 $n$ 的三角多项式全体
+    $\{a_n\cos nx+b_n\sin nx+\cdots +a_1\cos x+b_1\sin x +a_0: a_i,b_i\in\R\}$；
+    \item 约定用 $p$ 表示多项式，$t$ 表示三角多项式；
+    \item $\|f\| = \max_{x\in D} |f(x)|$，其中 $D$ 为函数的定义域。
+\end{enumerate}
+\end{definition}
+
+Weierstrass 第一逼近定理断言，$[a,b]$ 上的连续函数可用多项式一致逼近；第二逼近定理断言，$2\pi$ 周期连续函数可用三角多项式一致逼近。
+
+\subsection{误差尺度的衡量}
+用次数不超过 $n$ 的多项式（或三角多项式）逼近 $f$，自然关心能达到的最小误差。定义
+\[
+e(f,P_n) = \inf\{\|f-p\| : p\in P_n\},
+\]
+以及 $e(f,T_n)$ 类似。易见对任意 $n$，存在子列使得该误差趋于零，但收敛速度可能很慢（例如 $f(x)=|x|$ 在 $0$ 附近的逼近）。因此需要在限定次数的条件下寻找“最佳逼近”。
+
+\subsection{最佳逼近的存在性}
+\begin{definition}
+称 $p\in P_n$ 为 $f$ 在 $P_n$ 中的\textbf{最佳逼近}，若 $\|f-p\| = e(f,P_n)$。类似定义三角多项式的最佳逼近。
+\end{definition}
+
+\begin{theorem}
+设 $f\in C[a,b]$，则存在 $p\in P_n$ 使 $\|f-p\| = e(f,P_n)$。
+\end{theorem}
+\begin{proof}
+先给出一个引理。
+\begin{lemma}
+设 $\{p_m\}$ 是次数不超过 $n$ 的有界多项式列，则存在收敛子列 $p_{m_k}$ 满足 $\lim_{k\to\infty} p_{m_k} = p^*$。
+\end{lemma}
+引理可由反复使用 Bolzano–Weierstrass 定理证明。
+
+下记 $e_n(f)=e(f,P_n)$。对每个 $m\ge1$，存在 $p_m\in P_n$ 使得
+\[
+\|f-p_m\|  \leqslant  e_n(f) + \frac1m  \leqslant  e_n(f)+1.
+\]
+因为 $e_n(f) \leqslant  \|f-0\| = \|f\|$，故
+\[
+\|p_m\|  \leqslant  \|f\| + \|p_m-f\|  \leqslant \|f\| + e_n(f)+1  \leqslant 2\|f\|+1.
+\]
+即 $\{p_m\}$ 有界，从而存在子列 $\{p_{m_k}\}$ 收敛到某个 $p^*\in P_n$。
+下证 $p^*$ 即为最佳逼近。因为
+\[
+\|f-p_{m_k}\|  \leqslant e_n(f) + \frac1{m_k}  \leqslant e_n(f) + \frac1k,
+\]
+令 $k\to\infty$ 得 $\|f-p^*\| \leqslant e_n(f)$。又因 $e_n(f)$ 是下确界，必有 $\|f-p^*\| = e_n(f)$。
+\end{proof}
+
+类似可证
+\begin{theorem}
+设 $f\in C_{2\pi}$，则存在 $t\in T_n$ 使 $\|f-t\| = e(f,T_n)$。
+\end{theorem}
+
+\subsection{最佳逼近的特征刻画——切比雪夫交错定理}
+\begin{definition}[交错偏离点]
+设 $f\in C[a,b]$，$p\in P_n$，$r(x)=f(x)-p(x)$，
+若存在点列
+\[
+a \leqslant  x_1 < x_2 < \dots < x_N  \leqslant  b,
+\]
+满足：
+\begin{enumerate}
+    \item 对每个 $j$，$|r(x_j)| = \|r\| $；
+    \item 对每个 $j=1,\dots,N-1$，$r(x_j) = -r(x_{j+1})$，
+\end{enumerate}
+则称 $\{x_1,\dots,x_N\}$ 为 $r$ 的一组\textbf{交错点}，每个 $x_j$ 称为\textbf{交错偏离点}。
+\end{definition}
+
+\begin{theorem}[切比雪夫最佳逼近定理]
+设 $f\in C[a,b]$，则 $p\in P_n$ 是 $f$ 的最佳逼近当且仅当误差函数 $r(x)=f(x)-p(x)$ 存在 $n+2$ 个交错偏离点。\\
+设 $f\in C_{2\pi}$，则 $t\in T_n$ 是 $f$ 的最佳逼近当且仅当误差函数 $r(x)=f(x)-t(x)$ 存在 $2n+2$ 个交错偏离点。
+\end{theorem}
+% \input{chapter2_chebyshev/chebyshev_proof.tex}
+证明比较繁琐，详细见附录内容。
+\subsection{最佳逼近的唯一性}
+\begin{theorem}
+最佳逼近是唯一的：对 $f\in C[a,b]$，存在唯一的 $p\in P_n$ 使得 $\|f-p\| = e_n(f)$；对 $f\in C_{2\pi}$，存在唯一的 $t\in T_n$ 使得 $\|f-t\| = e(f,T_n)$。
+\end{theorem}
+
+\begin{proof}
+若不然，设 $p,q\in P_n$ 均为最佳逼近，则 $\|f-p\| = \|f-q\| = e_n(f)$。由三角不等式，
+\[
+\left\|f - \frac{p+q}{2}\right\|  \leqslant \frac12\|f-p\| + \frac12\|f-q\| = e_n(f),
+\]
+故 $\frac{p+q}{2}$ 亦为最佳逼近。由切比雪夫交错定理，存在 $n+2$ 个交错偏离点 $x_1<\cdots<x_{n+2}$。记 $d_p = f-p$, $d_q = f-q$，则
+\[
+\left|f(x_1) - \frac{p(x_1)+q(x_1)}{2}\right| = \frac{|d_p(x_1)+d_q(x_1)|}{2} = e_n(f).
+\]
+因 $|d_p|,|d_q| \leqslant e_n(f)$，上式仅当 $d_p(x_1)=d_q(x_1)$ 时成立，从而 $p(x_1)=q(x_1)$。同理对所有 $x_i$ 均有 $p(x_i)=q(x_i)$。一个 $n$ 次多项式在 $n+1$ 个点取值相同必恒等，矛盾。
+\end{proof}
+
+利用唯一性可得一些有用的推论。
+\begin{theorem}
+设 $f\in C_{2\pi}$ 为偶函数，$t\in T_n$ 是其最佳逼近，则 $t$ 也是偶函数。
+\end{theorem}
+\begin{proof}
+由 $\|f(x)-t(x)\| \leqslant e_n(f)$ 得 $\|f(-x)-t(-x)\| \leqslant e_n(f)$，故 $\|f(x)-t(-x)\| \leqslant e_n(f)$，即 $s(x)=t(-x)$ 也是最佳逼近。由唯一性 $t(x)=s(x)=t(-x)$。
+\end{proof}
+
+切比雪夫定理完整刻画了最佳逼近的充要条件，但一般而言，直接求出给定函数的最佳逼近多项式并不容易。这促使人们寻找另一类方法：构造结构简单的线性算子序列，它们虽未必是“最佳”的，但能明确写出，且一致收敛于目标函数。 Korovkin 定理恰好为这类构造性算子的收敛性提供了统一判据。从下一章开始，我们将具体考察若干经典的线性正算子及其逼近性质。
