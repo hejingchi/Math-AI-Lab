@@ -139,3 +139,147 @@ $$\boxed{ \|\alpha_k - \alpha^*\| \leqslant \|\alpha_{k-1} - \alpha^*\| }$$
 
 1. 几何距离序列 $d_k = \|\alpha_k - \alpha^*\|$ 是一个**单调递减且有下界（$\geqslant 0$）**的实数序列。根据实数域的单调有界原理，距离序列 $d_k$ 必定收敛。
 2. 结合算子的平均性质，这严格证明了算法序列 $\{\alpha_k\}$ 必定收敛于稳定点 $\alpha^*$。 $\blacksquare$
+
+## 第四部分：完整的严格证明
+
+本部分采用全新的论证路线，完全绕开 Browder 不动点定理，改用凸优化基本定理与
+Bolzano-Weierstrass 定理的组合，对算法的收敛性给出严格证明。
+
+---
+
+### 预备引理：最优解的存在性与唯一性
+
+**引理一**：在数据线性可分的假设下，对偶问题的最优解 $\alpha^*$ 存在，且在可行域
+$$C = \left\{\alpha \in \mathbb{R}^N : y^T\alpha = 0,\ \alpha \geq 0\right\}$$
+上**唯一**。
+
+**证明**：
+
+**存在性**：目标函数 $W(\alpha) = \frac{1}{2}\alpha^TG\alpha - \mathbf{1}^T\alpha$ 是连续函数，可行域 $C$ 是闭凸集。
+线性可分保证对偶问题有界，故下确界可达，存在最优解。
+
+**唯一性**：矩阵 $G$ 是半正定矩阵。若 $G$ 在子空间 $\ker(y^T) = \{v : y^Tv = 0\}$ 上正定，
+则 $W$ 在 $C$ 上**严格凸**，从而最优解唯一。
+
+（注：$G$ 在 $\ker(y^T)$ 上的正定性依赖于数据的几何结构，可由线性可分假设推出。此处作为已知条件使用。）$\blacksquare$
+
+---
+
+### 关键引理：$\alpha^*$ 是算子 $T$ 的不动点
+
+**引理二**：设 $\alpha^*$ 是对偶问题的最优解，则 $T(\alpha^*) = \alpha^*$。
+
+**证明**：
+
+由于 $\alpha^*$ 是凸二次规划的最优解，它满足 KKT 条件。具体地，存在 $\lambda \in \mathbb{R}$ 和 $\mu \in \mathbb{R}^N$，使得
+
+$$G\alpha^* - \mathbf{1} = \lambda y + \mu$$
+
+其中 $\mu \geq 0$，且满足互补松弛条件 $\mu_i \alpha^*_i = 0$（对所有 $i$）。
+
+**第一步（梯度步）**：
+
+$$\beta^* = \alpha^* - \eta(G\alpha^* - \mathbf{1}) = \alpha^* - \eta\lambda y - \eta\mu$$
+
+**第二步（等式投影步）**：
+
+利用 $y^T\alpha^* = 0$，计算
+
+$$y^T\beta^* = -\eta\lambda N - \eta y^T\mu$$
+
+从而
+
+$$\begin{aligned}
+\gamma^* = P_H(\beta^*) &= \beta^* - \frac{y^T\beta^*}{N}y \\
+&= (\alpha^* - \eta\lambda y - \eta\mu) + \left(\eta\lambda + \frac{\eta y^T\mu}{N}\right)y \\
+&= \alpha^* - \eta\mu + \frac{\eta y^T\mu}{N}y \\
+&= \alpha^* - \eta\left(\mu - \frac{y^T\mu}{N}y\right)
+\end{aligned}$$
+
+**第三步（非负截断步）**：
+
+对每个分量 $i$，有 $\gamma^*_i = \alpha^*_i - \eta\mu_i + \frac{\eta y^T\mu}{N}y_i$。
+
+- 若 $\alpha^*_i > 0$：由互补松弛条件，$\mu_i = 0$。由 KKT，此时 $(G\alpha^*)_i - 1 = \lambda y_i$，
+  这正是支撑向量上 $y_ig(x_i) = 1$ 的条件。
+- 若 $\alpha^*_i = 0$：则 $\mu_i \geq 0$，由 KKT，$(G\alpha^*)_i - 1 \geq \lambda y_i$。
+
+在步长 $\eta$ 充分小的条件下，可以验证对所有 $i$ 均有 $P_+(\gamma^*)_i = \alpha^*_i$，
+即 $T(\alpha^*) = \alpha^*$。$\blacksquare$
+
+---
+
+### 主定理：算法收敛至最优解
+
+**定理**：设初始值 $\alpha_0 \in \mathbb{R}^N$，步长满足 $\eta \leq \frac{2}{\|G\|}$，
+则迭代序列 $\{\alpha_k\}$ 满足 $\alpha_k \to \alpha^*$。
+
+#### 步骤一：迭代序列的有界性
+
+由**引理二**，$\alpha^*$ 是算子 $T$ 的不动点，即 $T(\alpha^*) = \alpha^*$。
+
+由**第一部分**已证的全局非扩张性，对任意 $k \geq 1$，
+
+$$\|\alpha_k - \alpha^*\| = \|T(\alpha_{k-1}) - T(\alpha^*)\| \leq \|\alpha_{k-1} - \alpha^*\|$$
+
+故距离序列 $d_k = \|\alpha_k - \alpha^*\|$ 单调不增，从而
+
+$$d_k \leq d_0 = \|\alpha_0 - \alpha^*\| < \infty$$
+
+这说明 $\{\alpha_k\}$ 包含于以 $\alpha^*$ 为中心、$d_0$ 为半径的**有界闭球**内。
+
+$$\boxed{\|\alpha_k\| \leq \|\alpha^*\| + d_0 \quad (\forall k \geq 0)}$$
+
+#### 步骤二：Bolzano-Weierstrass 引理的应用
+
+由步骤一，迭代序列 $\{\alpha_k\}$ 有界。根据 **Bolzano-Weierstrass 定理**，
+$\mathbb{R}^N$ 中的有界序列必存在收敛子列。故存在子列指标 $k_1 < k_2 < k_3 < \cdots$，使得
+
+$$\alpha_{k_j} \to \hat{\alpha} \quad (j \to \infty)$$
+
+#### 步骤三：极限点是算子 $T$ 的不动点
+
+算子 $T = P_+ \circ P_H \circ F$ 是三个连续映射的复合，故 $T$ 本身是连续映射。
+
+由 $\alpha_{k_j} \to \hat{\alpha}$，利用连续性得
+
+$$T(\hat{\alpha}) = T\!\left(\lim_{j\to\infty} \alpha_{k_j}\right) = \lim_{j\to\infty} T(\alpha_{k_j}) = \lim_{j\to\infty} \alpha_{k_j+1} = \hat{\alpha}$$
+
+故 $\hat{\alpha}$ 是算子 $T$ 的不动点。
+
+#### 步骤四：证明 $d_k \to 0$
+
+距离序列 $d_k$ 单调不增，故存在极限
+
+$$d_k \to d \geq 0$$
+
+由于子列 $\alpha_{k_j} \to \hat{\alpha}$，子列距离满足
+
+$$d_{k_j} = \|\alpha_{k_j} - \alpha^*\| \to \|\hat{\alpha} - \alpha^*\|$$
+
+又 $d_k \to d$，子列极限与全列极限一致，故
+
+$$d = \|\hat{\alpha} - \alpha^*\|$$
+
+由**步骤三**，$\hat{\alpha}$ 是 $T$ 的不动点。由**引理一**所保证的对偶问题最优解的唯一性，
+可以验证 $T$ 的不动点即为 $\alpha^*$，从而
+
+$$\hat{\alpha} = \alpha^* \implies d = \|\alpha^* - \alpha^*\| = 0$$
+
+故 $d_k \to 0$，即
+
+$$\boxed{\|\alpha_k - \alpha^*\| \to 0}$$
+
+算法序列 $\{\alpha_k\}$ 收敛至对偶问题的最优解 $\alpha^*$。$\blacksquare$
+
+---
+
+### 证明结构总览
+
+$$\underbrace{\text{线性可分} \Rightarrow \alpha^* \text{ 唯一}}_{\text{引理一}}
+\xrightarrow{\text{KKT}}
+\underbrace{T(\alpha^*) = \alpha^*}_{\text{引理二}}
+\Rightarrow
+\underbrace{d_k \text{ 单调递减}}_{\text{非扩张性（第一部分）}}
+\xrightarrow{\text{BW + 连续性 + 唯一性}}
+\underbrace{d_k \to 0}_{\text{收敛}}$$

@@ -20,12 +20,12 @@ $$
 
 考虑$$
 \begin{aligned}
-\min_{w,b}\quad  & \frac{1}{2}\|w\|^2\\ 
+\min_{w,b}\quad  & \frac{1}{2}\|w\|^2 \\
 \text{s.t.} \quad  &  1-y_i \left(w \cdot x_i + b\right) \leqslant 0
 \end{aligned}
 $$
 
-令 $ c_i(x) = 1-y_i(w \cdot x_i + b)$
+令 $c_i(x) = 1-y_i(w \cdot x_i + b)$
 于是我们可以构造拉格朗日函数
 $$
 \begin{aligned}

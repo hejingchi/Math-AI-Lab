@@ -2,7 +2,6 @@ from matplotlib import pyplot as plt
 import numpy as np
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
-from MachineLearning.Perceptron.perceptron import *
 
 def plot2d(data, label, random_w, random_b, predict_w, predict_b):
     '''
