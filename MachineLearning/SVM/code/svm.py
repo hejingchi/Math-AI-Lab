@@ -85,13 +85,14 @@ def svm_hard(x, y):
     gram_x = np.array(x @ x.T) # 计算向量内积
     gram_y = np.array(y[:, None] @ y[None, :])
     G = gram_y * gram_x
+    lr = learning_rate(G)
     # data是N*2的 gram阵是N*N的
     # y[:,None]是N*1的标签列向量 y[None,:]是1*N的标签行向量
     # 我们计算两个矩阵的逐个元素的乘积。
     # 于是目标函数变为了 f(\alpha) = \frac{1}{2} \sum_{i, j} \alpha_i \alpha j gram[i][j]
     # 我们极小化这个函数肯定要算梯度 这个本质上是二次型
     # f(\alpha) = \frac{1}{2} \alpha^T gram \alpha 其中gram是对称正定矩阵
-    for epoch in range(100):
+    for epoch in range(20):
         running_loss = 0
         # lr = lr / (1.0 + 0.001 * epoch)
         for i in range(N * 10):
@@ -106,7 +107,7 @@ def svm_hard(x, y):
         b = y[j] - w @ x[j] # 计算b
         correct_idx = np.where(y * (x @ w + b) > 0)[0]
         correct_len = len(correct_idx)
-        f_alpha = 0.5 * alpha @ G @ alpha - np.sum(alpha)
+        f_alpha = 0.5 * alpha @ G @ alpha - np.sum(alpha) # 实际上在算的损失函数
         if epoch % 10 == 0:
             print(f"f_alpha = {f_alpha:.3f}")
 
@@ -173,15 +174,15 @@ def svm_soft(x, y):
         correct_len = len(correct_idx)
         accuracy = correct_len / N
         f_alpha = 0.5 * alpha @ G @ alpha - np.sum(alpha)
-        if epoch % 10 == 0:
-            print(f"f_alpha = {f_alpha:.3f}, accuracy = {accuracy*100:.2f}%")
+        if epoch % 10 == 9:
+            print(f"epoch = {epoch + 1}, f_alpha = {f_alpha:.3f}, accuracy = {accuracy*100:.2f}%")
+            # 输出轮次、误差和准确度
 
     print(f"linear svm: {np.array2string(w, precision=2)} @ x + {b:.4f}")
     return w, b
 
 def linear():
     data1, y1, random_w1, random_b1 = random_data_hard(100, 2) # 硬间隔
-    print("="*30)
     print("="*10, "linear svm", "="*10)
     predict_w1, predict_b1 = svm_hard(data1, y1) # 硬间隔
     print(f"random data is {np.array2string(random_w1,precision=2)} @ x + {random_b1:.2f}")
@@ -189,17 +190,17 @@ def linear():
     print("="*30)
 
 def unlinear():
-    data2, y2, random_w2, random_b2 = random_data_soft(100, 2)  # 两个数据初始化
+    data2, y2, random_w2, random_b2 = random_data_soft(1000, 2)  # 两个数据初始化
     print("=" * 10, "unlinear svm", "=" * 10)
     predict_w2, predict_b2 = svm_soft(data2, y2)
     plot2d(data2, y2, random_w2, random_b2, predict_w2, predict_b2)
     print("=" * 30)
-    return
 
 def main():
 
     # linear()
     while 1:
+        # linear()
         unlinear()
 
 if __name__ == "__main__":
